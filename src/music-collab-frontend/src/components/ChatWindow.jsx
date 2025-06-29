@@ -1,92 +1,71 @@
 import React, { useState, useEffect } from 'react';
-import './ChatWindow.css';
 
 const ChatWindow = ({ project, user }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
 
-  // Mock chat data - in real app, this would connect to a real-time chat service
+  // Placeholder messages for demo
   useEffect(() => {
-    const mockMessages = [
+    setMessages([
       {
         id: 1,
         user: 'Alice',
-        principal: 'abc123...',
-        message: 'Hey everyone! Ready to work on the chorus?',
-        timestamp: new Date(Date.now() - 300000).toISOString()
+        message: 'Hey everyone! Ready to work on this track?',
+        timestamp: new Date(Date.now() - 3600000).toLocaleTimeString()
       },
       {
         id: 2,
         user: 'Bob',
-        principal: 'def456...',
-        message: 'Sounds good! I have some ideas for the harmony',
-        timestamp: new Date(Date.now() - 240000).toISOString()
-      },
-      {
-        id: 3,
-        user: user?.principal?.slice(0, 8) || 'You',
-        principal: user?.principal || 'current',
-        message: 'Just joined the session!',
-        timestamp: new Date().toISOString()
+        message: 'Yes! I have some new drum patterns to share',
+        timestamp: new Date(Date.now() - 1800000).toLocaleTimeString()
       }
-    ];
-    setMessages(mockMessages);
-  }, [user]);
+    ]);
+  }, []);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (newMessage.trim()) {
-      const message = {
-        id: messages.length + 1,
-        user: user?.principal?.slice(0, 8) || 'You',
-        principal: user?.principal || 'current',
-        message: newMessage.trim(),
-        timestamp: new Date().toISOString()
-      };
-      setMessages([...messages, message]);
-      setNewMessage('');
-    }
-  };
+    if (!newMessage.trim()) return;
 
-  const formatTime = (timestamp) => {
-    return new Date(timestamp).toLocaleTimeString([], { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    });
+    const message = {
+      id: Date.now(),
+      user: user?.name || 'Anonymous',
+      message: newMessage,
+      timestamp: new Date().toLocaleTimeString()
+    };
+
+    setMessages([...messages, message]);
+    setNewMessage('');
   };
 
   return (
     <div className="chat-window">
       <div className="chat-header">
         <h3>💬 Team Chat</h3>
-        <span className="chat-info">Project: {project.title}</span>
+        <p>Real-time collaboration chat for "{project.title}"</p>
       </div>
-      
+
       <div className="chat-messages">
-        {messages.map(message => (
-          <div 
-            key={message.id} 
-            className={`message ${message.principal === user?.principal ? 'own-message' : ''}`}
-          >
+        {messages.map(msg => (
+          <div key={msg.id} className="chat-message">
             <div className="message-header">
-              <span className="message-user">{message.user}</span>
-              <span className="message-time">{formatTime(message.timestamp)}</span>
+              <span className="message-user">{msg.user}</span>
+              <span className="message-time">{msg.timestamp}</span>
             </div>
-            <div className="message-content">{message.message}</div>
+            <div className="message-content">{msg.message}</div>
           </div>
         ))}
       </div>
-      
-      <form onSubmit={handleSendMessage} className="chat-input">
+
+      <form className="chat-input" onSubmit={handleSendMessage}>
         <input
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
+          placeholder="Type your message..."
           className="message-input"
         />
-        <button type="submit" className="send-btn" disabled={!newMessage.trim()}>
-          📤
+        <button type="submit" className="send-btn">
+          Send
         </button>
       </form>
     </div>

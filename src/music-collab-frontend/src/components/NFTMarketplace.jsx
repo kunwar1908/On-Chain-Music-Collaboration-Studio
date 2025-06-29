@@ -1,29 +1,19 @@
 import React, { useState } from 'react';
 import NFTCard from './NFTCard';
 import MintNFTModal from './MintNFTModal';
+import WaveformNFTModal from './WaveformNFTModal';
 import './NFTMarketplace.css';
 
-const NFTMarketplace = ({ nfts, projects, onRefresh, user }) => {
+const NFTMarketplace = ({ nfts, projects, onRefresh, onMintNFT, user }) => {
   const [showMintModal, setShowMintModal] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [filter, setFilter] = useState('all'); // 'all', 'owned', 'available'
+  const [showWaveformModal, setShowWaveformModal] = useState(false);
+  const [filter, setFilter] = useState('all'); // 'all', 'my', 'available'
 
-  const handleMintNFT = async (nftData) => {
-    try {
-      // In a real implementation, this would call the backend to mint an NFT
-      console.log('Minting NFT:', nftData);
-      alert('NFT minting functionality will be implemented with smart contracts');
-      setShowMintModal(false);
-      onRefresh();
-    } catch (error) {
-      console.error('Error minting NFT:', error);
-      alert('Failed to mint NFT');
-    }
-  };
+  console.log('NFTMarketplace received projects:', projects);
 
   const filteredNFTs = nfts.filter(nft => {
     switch (filter) {
-      case 'owned':
+      case 'my':
         return nft.creator === user?.principal;
       case 'available':
         return nft.creator !== user?.principal;
@@ -32,72 +22,82 @@ const NFTMarketplace = ({ nfts, projects, onRefresh, user }) => {
     }
   });
 
+  const handleMintNFT = async (nftData) => {
+    try {
+      await onMintNFT(nftData);
+      setShowMintModal(false);
+      onRefresh();
+    } catch (error) {
+      console.error('Error minting NFT:', error);
+      alert('Failed to mint NFT. Please try again.');
+    }
+  };
+
   return (
     <div className="nft-marketplace">
       <div className="marketplace-header">
         <h2>🎵 Music NFT Marketplace</h2>
-        <p>Discover, collect, and trade unique music NFTs</p>
-      </div>
-
-      <div className="marketplace-controls">
-        <div className="filter-tabs">
+        <div className="marketplace-actions">
+          <div className="filter-tabs">
+            <button 
+              className={`filter-tab ${filter === 'all' ? 'active' : ''}`}
+              onClick={() => setFilter('all')}
+            >
+              All NFTs
+            </button>
+            <button 
+              className={`filter-tab ${filter === 'my' ? 'active' : ''}`}
+              onClick={() => setFilter('my')}
+            >
+              My NFTs
+            </button>
+            <button 
+              className={`filter-tab ${filter === 'available' ? 'active' : ''}`}
+              onClick={() => setFilter('available')}
+            >
+              Available
+            </button>
+          </div>
           <button 
-            className={`filter-tab ${filter === 'all' ? 'active' : ''}`}
-            onClick={() => setFilter('all')}
+            className="btn-primary"
+            onClick={() => setShowMintModal(true)}
           >
-            All NFTs ({nfts.length})
+            💎 Quick Mint
           </button>
           <button 
-            className={`filter-tab ${filter === 'owned' ? 'active' : ''}`}
-            onClick={() => setFilter('owned')}
+            className="btn-secondary"
+            onClick={() => setShowWaveformModal(true)}
           >
-            My NFTs ({nfts.filter(n => n.creator === user?.principal).length})
-          </button>
-          <button 
-            className={`filter-tab ${filter === 'available' ? 'active' : ''}`}
-            onClick={() => setFilter('available')}
-          >
-            Available ({nfts.filter(n => n.creator !== user?.principal).length})
+            🎵 Audio NFT
           </button>
         </div>
-        
-        <button 
-          className="btn-primary"
-          onClick={() => setShowMintModal(true)}
-        >
-          💎 Mint New NFT
-        </button>
       </div>
 
       {filteredNFTs.length === 0 ? (
-        <div className="empty-marketplace">
+        <div className="empty-state">
           <div className="empty-icon">💎</div>
-          <h3>No NFTs Found</h3>
+          <h3>No NFTs found</h3>
           <p>
-            {filter === 'all' 
-              ? 'Be the first to mint a music NFT!'
-              : filter === 'owned'
-              ? 'You haven\'t created any NFTs yet.'
-              : 'No NFTs available for purchase.'
+            {filter === 'my' 
+              ? 'You haven\'t minted any NFTs yet. Create your first music NFT!'
+              : 'Be the first to mint a music NFT on this platform!'
             }
           </p>
-          {projects.length > 0 && (
-            <button 
-              className="btn-secondary"
-              onClick={() => setShowMintModal(true)}
-            >
-              Create Your First NFT
-            </button>
-          )}
+          <button 
+            className="btn-primary"
+            onClick={() => setShowMintModal(true)}
+          >
+            Mint Your First NFT
+          </button>
         </div>
       ) : (
         <div className="nft-grid">
           {filteredNFTs.map(nft => (
-            <NFTCard 
-              key={nft.id} 
-              nft={nft} 
-              user={user}
-              onPurchase={() => console.log('Purchase NFT:', nft.id)}
+            <NFTCard
+              key={nft.id}
+              nft={nft}
+              project={projects.find(p => p.id === nft.project_id)}
+              isOwner={nft.creator === user?.principal}
             />
           ))}
         </div>
@@ -106,8 +106,18 @@ const NFTMarketplace = ({ nfts, projects, onRefresh, user }) => {
       {showMintModal && (
         <MintNFTModal
           projects={projects}
-          onMint={handleMintNFT}
+          onSubmit={handleMintNFT}
           onClose={() => setShowMintModal(false)}
+          user={user}
+        />
+      )}
+
+      {showWaveformModal && (
+        <WaveformNFTModal
+          projects={projects}
+          onSubmit={handleMintNFT}
+          onClose={() => setShowWaveformModal(false)}
+          user={user}
         />
       )}
     </div>

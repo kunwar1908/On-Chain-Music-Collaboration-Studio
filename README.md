@@ -1,222 +1,53 @@
-# 🎵 Music Collab - Decentralized Music Collaboration Platform
+# `music-collab`
 
-A full-stack decentralized application (dApp) built on the Internet Computer Protocol (ICP) that enables musicians and artists to collaborate in real-time, mint NFTs, manage royalties, and participate in decentralized governance.
+Welcome to your new `music-collab` project and to the Internet Computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
 
-## 🌟 Key Features
+To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
 
-### 🎼 Project Management
-- **Create Music Projects**: Musicians can create new collaborative projects with titles, descriptions, and metadata
-- **Project Ownership**: Secure ownership management with Internet Identity authentication
-- **Contributor Management**: Add and manage contributors to collaborative projects
-- **Project Discovery**: Browse and discover music projects created by the community
+To learn more before you start working with `music-collab`, see the following documentation available online:
 
-### 🎧 Track Collaboration
-- **Track Upload**: Upload music tracks with IPFS integration for decentralized storage
-- **Version Control**: Track different versions and iterations of musical compositions
-- **Collaborative Editing**: Real-time collaboration features for music creation
-- **Track Management**: Organize and manage tracks within projects
+- [Quick Start](https://internetcomputer.org/docs/current/developer-docs/setup/deploy-locally)
+- [SDK Developer Tools](https://internetcomputer.org/docs/current/developer-docs/setup/install)
+- [Rust Canister Development Guide](https://internetcomputer.org/docs/current/developer-docs/backend/rust/)
+- [ic-cdk](https://docs.rs/ic-cdk)
+- [ic-cdk-macros](https://docs.rs/ic-cdk-macros)
+- [Candid Introduction](https://internetcomputer.org/docs/current/developer-docs/backend/candid/)
 
-### 🎨 NFT Marketplace
-- **NFT Minting**: Convert music projects and tracks into NFTs
-- **Marketplace**: Buy, sell, and trade music NFTs
-- **Custom Metadata**: Rich metadata support for music NFTs including artwork and descriptions
-- **Price Discovery**: Market-driven pricing for music NFTs
-
-### 💰 Royalty Management
-- **Revenue Distribution**: Automatic royalty distribution among contributors
-- **Smart Contracts**: Transparent and automated payment systems
-- **Contributor Rewards**: Fair compensation based on contribution levels
-- **Analytics**: Track earnings and royalty distributions
-
-### 🏛️ Decentralized Governance
-- **Community Voting**: Participate in platform governance decisions
-- **Proposal System**: Submit and vote on platform improvements
-- **Transparent Decision Making**: All governance actions recorded on-chain
-
-### 🔐 Authentication & Security
-- **Internet Identity**: Secure authentication using ICP's Internet Identity
-- **Decentralized Storage**: IPFS integration for secure file storage
-- **On-chain Data**: All critical data stored on the Internet Computer blockchain
-
-## 🏗️ Architecture
-
-### Backend (Rust/IC CDK)
-```
-src/music-collab-backend/
-├── src/
-│   └── lib.rs              # Main canister logic
-├── Cargo.toml              # Rust dependencies
-└── music-collab-backend.did # Candid interface
-```
-
-**Core Data Structures:**
-- `MusicProject`: Project metadata, contributors, tracks
-- `Track`: Music file references, IPFS hashes, timestamps
-- `NFTMetadata`: NFT information, pricing, ownership
-- `RoyaltyDistribution`: Payment and revenue sharing
-
-### Frontend (React/Vite)
-```
-src/music-collab-frontend/
-├── src/
-│   ├── App.jsx             # Main application component
-│   ├── components/         # React components
-│   │   ├── ProjectForm.jsx      # Create new projects
-│   │   ├── ProjectList.jsx      # Browse projects
-│   │   ├── ProjectDetail.jsx    # Project details view
-│   │   ├── TrackUpload.jsx      # Upload music tracks
-│   │   ├── TrackList.jsx        # Display tracks
-│   │   ├── NFTMarketplace.jsx   # NFT trading
-│   │   ├── MintNFTModal.jsx     # NFT creation
-│   │   ├── CollaborationHub.jsx # Real-time collaboration
-│   │   ├── ChatWindow.jsx       # Communication
-│   │   ├── SessionManager.jsx   # Collaboration sessions
-│   │   ├── RoyaltyManager.jsx   # Revenue management
-│   │   └── Navigation.jsx       # App navigation
-│   └── services/
-│       └── auth.js         # Internet Identity integration
-└── package.json
-```
-
-## 🔧 Technical Stack
-
-- **Blockchain**: Internet Computer Protocol (ICP)
-- **Backend**: Rust with IC CDK
-- **Frontend**: React 18 with Vite
-- **Authentication**: Internet Identity
-- **Storage**: IPFS for decentralized file storage
-- **Styling**: Modern CSS with responsive design
-- **Build Tool**: Vite for fast development and building
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (>= 16.0.0)
-- NPM (>= 7.0.0)
-- DFX (DFINITY Canister SDK)
-- Rust (for backend development)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd music-collab
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start local ICP environment**
-   ```bash
-   dfx start --clean --background
-   ```
-
-4. **Deploy canisters**
-   ```bash
-   dfx deploy
-   ```
-
-5. **Start frontend development server**
-   ```bash
-   npm start
-   ```
-
-### Development Commands
+If you want to start working on your project right away, you might want to try the following commands:
 
 ```bash
-# Build all packages
-npm run build
-
-# Run tests
-npm test
-
-# Deploy backend canister
-dfx deploy music-collab-backend
-
-# Deploy frontend canister
-dfx deploy music-collab-frontend
-
-# Check canister status
-dfx ping
-
-# Generate candid interface
-dfx generate music-collab-backend
+cd music-collab/
+dfx help
+dfx canister --help
 ```
 
-## 📁 Project Structure
+## Running the project locally
 
-```
-music-collab/
-├── dfx.json                    # DFX configuration
-├── package.json               # Root package configuration
-├── tsconfig.json              # TypeScript configuration
-├── webpack.config.js          # Webpack configuration
-├── canister_ids.json          # Canister deployment IDs
-├── src/
-│   ├── declarations/          # Generated canister interfaces
-│   ├── music-collab-backend/  # Rust backend canister
-│   └── music-collab-frontend/ # React frontend application
-└── README.md                  # This file
+If you want to test your project locally, you can use the following commands:
+
+```bash
+# Starts the replica, running in the background
+dfx start --background
+
+# Deploys your canisters to the replica and generates your candid interface
+dfx deploy
 ```
 
-## 🎯 Use Cases
+Once the job completes, your application will be available at `http://localhost:4943?canisterId={asset_canister_id}`.
 
-1. **Independent Musicians**: Create projects, collaborate with other artists, and monetize through NFTs
-2. **Record Labels**: Manage multiple artists and projects with transparent royalty distribution
-3. **Music Producers**: Collaborate on beats and productions with automatic attribution
-4. **Music Collectors**: Discover and collect unique music NFTs from emerging artists
-5. **Music Communities**: Participate in governance and shape the platform's future
+If you have made changes to your backend canister, you can generate a new candid interface with
 
-## 🔐 Security Features
+```bash
+npm run generate
+```
 
-- **Decentralized Authentication**: No passwords, secure Internet Identity
-- **On-chain Ownership**: Immutable ownership records on ICP blockchain
-- **IPFS Storage**: Decentralized file storage prevents single points of failure
-- **Smart Contract Automation**: Trustless royalty distribution and NFT management
+at any time. This is recommended before starting the frontend development server, and will be run automatically any time you run `dfx deploy`.
 
-## 🌐 Deployment
+If you are making frontend changes, you can start a development server with
 
-The application is deployed on the Internet Computer Protocol:
-
-- **Backend Canister**: Handles all business logic and data storage
-- **Frontend Canister**: Serves the React application
-- **Asset Canister**: Manages static assets and media files
-
-## 📈 Future Roadmap
-
-- [ ] Real-time audio collaboration tools
-- [ ] Advanced music mixing and editing features
-- [ ] Integration with music streaming platforms
-- [ ] Mobile application development
-- [ ] Cross-chain NFT compatibility
-- [ ] Advanced analytics and insights
-- [ ] AI-powered music recommendations
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🆘 Support
-
-For support and questions:
-- Create an issue in the repository
-- Join our community discussions
-- Check the documentation
-
----
-
-**Built with ❤️ for the decentralized music community**
+```bash
+npm start
+```
 
 Which will start a server at `http://localhost:8080`, proxying API requests to the replica at port 4943.
 

@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import './MintNFTModal.css';
 
-const MintNFTModal = ({ projects, onMint, onClose }) => {
+const MintNFTModal = ({ projects, onSubmit, onClose, user }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    imageUrl: '',
     projectId: '',
-    price: '',
-    imageUrl: ''
+    price: ''
   });
+
+  console.log('MintNFTModal received projects:', projects);
 
   const handleChange = (e) => {
     setFormData({
@@ -20,21 +22,21 @@ const MintNFTModal = ({ projects, onMint, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.name && formData.description && formData.projectId && formData.price) {
-      onMint({
+      const nftData = {
         name: formData.name,
         description: formData.description,
+        image_url: formData.imageUrl || `https://picsum.photos/400/400?random=${Date.now()}`,
+        creator: user?.principal || 'anonymous',
         project_id: parseInt(formData.projectId),
-        price: parseFloat(formData.price),
-        image_url: formData.imageUrl || ''
-      });
-    } else {
-      alert('Please fill in all required fields');
+        price: parseInt(formData.price) * 1000000 // Convert ICP to smallest unit
+      };
+      onSubmit(nftData);
     }
   };
 
   return (
-    <div className="mint-modal-overlay">
-      <div className="mint-modal">
+    <div className="modal-overlay">
+      <div className="mint-nft-modal">
         <div className="modal-header">
           <h3>💎 Mint Music NFT</h3>
           <button className="close-btn" onClick={onClose}>✕</button>
@@ -77,12 +79,37 @@ const MintNFTModal = ({ projects, onMint, onClose }) => {
               required
             >
               <option value="">Select a project</option>
-              {projects.map(project => (
-                <option key={project.id} value={project.id}>
-                  {project.title}
-                </option>
-              ))}
+              {projects && projects.length > 0 ? (
+                projects.map(project => (
+                  <option key={project.id} value={project.id}>
+                    {project.title}
+                  </option>
+                ))
+              ) : (
+                <option value="" disabled>No projects available - Create a project first</option>
+              )}
             </select>
+            {(!projects || projects.length === 0) && (
+              <small className="helper-text">
+                You need to create a music project first before minting NFTs. 
+                <a href="#" onClick={(e) => { e.preventDefault(); onClose(); }}>
+                  Go to Projects
+                </a>
+              </small>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="imageUrl">Image URL (Optional)</label>
+            <input
+              type="url"
+              id="imageUrl"
+              name="imageUrl"
+              value={formData.imageUrl}
+              onChange={handleChange}
+              placeholder="https://example.com/artwork.jpg"
+            />
+            <small>Leave empty to generate a random image</small>
           </div>
 
           <div className="form-group">
@@ -93,31 +120,23 @@ const MintNFTModal = ({ projects, onMint, onClose }) => {
               name="price"
               value={formData.price}
               onChange={handleChange}
-              placeholder="0.1"
-              step="0.001"
+              placeholder="0.5"
+              step="0.01"
               min="0"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="imageUrl">Image URL (optional)</label>
-            <input
-              type="url"
-              id="imageUrl"
-              name="imageUrl"
-              value={formData.imageUrl}
-              onChange={handleChange}
-              placeholder="https://..."
-            />
-          </div>
-
-          <div className="modal-actions">
+          <div className="form-actions">
             <button type="button" className="btn-secondary" onClick={onClose}>
               Cancel
             </button>
-            <button type="submit" className="btn-primary">
-              💎 Mint NFT
+            <button 
+              type="submit" 
+              className="btn-primary"
+              disabled={!formData.name || !formData.description || !formData.projectId || !formData.price}
+            >
+              Mint NFT
             </button>
           </div>
         </form>

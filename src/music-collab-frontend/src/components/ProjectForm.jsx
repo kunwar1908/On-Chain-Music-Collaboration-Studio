@@ -1,21 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './ProjectForm.css';
 
-const ProjectForm = ({ onSubmit, onCancel, loading, user }) => {
+const ProjectForm = ({ onSubmit, onCancel, loading }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     owner: ''
   });
-
-  useEffect(() => {
-    if (user && user.principal) {
-      setFormData(prev => ({
-        ...prev,
-        owner: user.principal.slice(0, 20) + '...' // Use first 20 chars of principal as default owner
-      }));
-    }
-  }, [user]);
 
   const handleChange = (e) => {
     setFormData({

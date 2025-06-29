@@ -35,8 +35,9 @@ pub struct NFTMetadata {
 
 thread_local! {
     static PROJECTS: std::cell::RefCell<HashMap<u64, MusicProject>> = std::cell::RefCell::new(HashMap::new());
-    static NEXT_ID: std::cell::RefCell<u64> = std::cell::RefCell::new(1);
     static NFTS: std::cell::RefCell<HashMap<u64, NFTMetadata>> = std::cell::RefCell::new(HashMap::new());
+    static NEXT_ID: std::cell::RefCell<u64> = std::cell::RefCell::new(1);
+    static NEXT_NFT_ID: std::cell::RefCell<u64> = std::cell::RefCell::new(1);
 }
 
 #[ic_cdk::update]
@@ -131,9 +132,40 @@ fn get_project_tracks(project_id: u64) -> Vec<Track> {
     })
 }
 
+#[ic_cdk::update]
+fn mint_nft(name: String, description: String, image_url: String, creator: String, project_id: u64, price: u64) -> u64 {
+    let id = NEXT_NFT_ID.with(|id| {
+        let mut id = id.borrow_mut();
+        let current = *id;
+        *id += 1;
+        current
+    });
+    
+    let nft = NFTMetadata {
+        id,
+        name,
+        description,
+        image_url,
+        creator,
+        project_id,
+        price,
+    };
+    
+    NFTS.with(|nfts| {
+        nfts.borrow_mut().insert(id, nft);
+    });
+    
+    id
+}
+
 #[ic_cdk::query]
 fn list_nfts() -> Vec<NFTMetadata> {
     NFTS.with(|nfts| {
         nfts.borrow().values().cloned().collect()
     })
+}
+
+#[ic_cdk::query]
+fn get_nft(nft_id: u64) -> Option<NFTMetadata> {
+    NFTS.with(|nfts| nfts.borrow().get(&nft_id).cloned())
 }

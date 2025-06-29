@@ -4,7 +4,7 @@ import TrackUpload from './TrackUpload';
 import TrackList from './TrackList';
 import './ProjectDetail.css';
 
-const ProjectDetail = ({ project, onBack, onUpdate }) => {
+const ProjectDetail = ({ project, onBack, onUpdate, onStartCollaboration }) => {
   const [showUpload, setShowUpload] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -73,6 +73,14 @@ const ProjectDetail = ({ project, onBack, onUpdate }) => {
             <span><strong>Owner:</strong> {project.owner}</span>
             <span><strong>Contributors:</strong> {project.contributors.length}</span>
             <span><strong>Tracks:</strong> {project.tracks.length}</span>
+          </div>
+          <div className="project-actions">
+            <button 
+              className="btn-primary" 
+              onClick={() => onStartCollaboration && onStartCollaboration()}
+            >
+              🤝 Start Collaboration
+            </button>
           </div>
         </div>
       </div>

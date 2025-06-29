@@ -1,114 +1,86 @@
 import React, { useState } from 'react';
-import './SessionManager.css';
 
 const SessionManager = ({ project, user }) => {
-  const [isRecording, setIsRecording] = useState(false);
-  const [sessionMembers, setSessionMembers] = useState([
-    { id: 1, name: 'Alice', status: 'active', instrument: 'Piano' },
-    { id: 2, name: 'Bob', status: 'active', instrument: 'Guitar' },
-    { id: 3, name: 'You', status: 'active', instrument: 'Vocals' }
+  const [isSessionActive, setIsSessionActive] = useState(false);
+  const [participants, setParticipants] = useState([
+    { id: 1, name: 'Alice', status: 'online', instrument: 'Piano' },
+    { id: 2, name: 'Bob', status: 'online', instrument: 'Drums' }
   ]);
 
-  const handleStartRecording = () => {
-    setIsRecording(true);
-    // In a real app, this would start audio recording
-    console.log('Started recording session...');
+  const handleStartSession = () => {
+    setIsSessionActive(true);
+    // In a real implementation, this would connect to a WebRTC session
   };
 
-  const handleStopRecording = () => {
-    setIsRecording(false);
-    // In a real app, this would stop and save the recording
-    console.log('Stopped recording session...');
-    alert('Recording saved! (This is a demo)');
-  };
-
-  const handleInviteMember = () => {
-    const email = prompt('Enter collaborator email:');
-    if (email) {
-      alert(`Invitation sent to ${email}! (This is a demo)`);
-    }
+  const handleEndSession = () => {
+    setIsSessionActive(false);
   };
 
   return (
     <div className="session-manager">
       <div className="session-header">
         <h3>🎹 Live Session</h3>
-        <div className="session-status">
-          <span className={`status-indicator ${isRecording ? 'recording' : 'idle'}`}>
-            {isRecording ? '🔴 Recording' : '⚪ Ready'}
-          </span>
+        <p>Real-time music collaboration for "{project.title}"</p>
+      </div>
+
+      <div className="session-status">
+        <div className={`status-indicator ${isSessionActive ? 'active' : 'inactive'}`}>
+          <span className="status-dot"></span>
+          {isSessionActive ? 'Session Active' : 'Session Inactive'}
+        </div>
+        
+        <div className="session-controls">
+          {!isSessionActive ? (
+            <button className="btn-primary" onClick={handleStartSession}>
+              🎵 Start Live Session
+            </button>
+          ) : (
+            <button className="btn-danger" onClick={handleEndSession}>
+              ⏹️ End Session
+            </button>
+          )}
         </div>
       </div>
 
-      <div className="session-content">
-        <div className="session-controls">
-          <h4>Session Controls</h4>
-          <div className="control-buttons">
-            {!isRecording ? (
-              <button className="btn-primary record-btn" onClick={handleStartRecording}>
-                🎤 Start Recording
-              </button>
-            ) : (
-              <button className="btn-danger record-btn" onClick={handleStopRecording}>
-                ⏹️ Stop Recording
-              </button>
-            )}
-            <button className="btn-secondary">
-              🎵 Play Track
-            </button>
-            <button className="btn-secondary">
-              ⏸️ Pause
-            </button>
-          </div>
+      <div className="participants-section">
+        <h4>Participants ({participants.length})</h4>
+        <div className="participants-list">
+          {participants.map(participant => (
+            <div key={participant.id} className="participant-card">
+              <div className="participant-info">
+                <span className="participant-name">{participant.name}</span>
+                <span className="participant-instrument">{participant.instrument}</span>
+              </div>
+              <div className={`participant-status ${participant.status}`}>
+                <span className="status-dot"></span>
+                {participant.status}
+              </div>
+            </div>
+          ))}
         </div>
+      </div>
 
-        <div className="session-members">
-          <div className="members-header">
-            <h4>Session Members ({sessionMembers.length})</h4>
-            <button className="btn-secondary invite-btn" onClick={handleInviteMember}>
-              ➕ Invite
-            </button>
+      {isSessionActive && (
+        <div className="session-workspace">
+          <div className="session-tools">
+            <h4>Session Tools</h4>
+            <div className="tool-buttons">
+              <button className="tool-btn">🎹 Virtual Piano</button>
+              <button className="tool-btn">🥁 Drum Pad</button>
+              <button className="tool-btn">🎤 Record</button>
+              <button className="tool-btn">📊 Metronome</button>
+            </div>
           </div>
           
-          <div className="members-list">
-            {sessionMembers.map(member => (
-              <div key={member.id} className="member-card">
-                <div className="member-info">
-                  <span className="member-name">{member.name}</span>
-                  <span className="member-instrument">{member.instrument}</span>
-                </div>
-                <div className={`member-status ${member.status}`}>
-                  {member.status === 'active' ? '🟢' : '🔴'}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="session-timeline">
-          <h4>Recording Timeline</h4>
-          <div className="timeline-placeholder">
-            <div className="timeline-track">
-              <span>🎹 Piano Track</span>
-              <div className="track-bar">
-                <div className="track-progress" style={{width: '60%'}}></div>
-              </div>
-            </div>
-            <div className="timeline-track">
-              <span>🎸 Guitar Track</span>
-              <div className="track-bar">
-                <div className="track-progress" style={{width: '45%'}}></div>
-              </div>
-            </div>
-            <div className="timeline-track">
-              <span>🎤 Vocal Track</span>
-              <div className="track-bar">
-                <div className="track-progress" style={{width: '30%'}}></div>
-              </div>
+          <div className="session-timeline">
+            <h4>Session Timeline</h4>
+            <div className="timeline-placeholder">
+              <p>🎵 Real-time collaboration workspace would appear here</p>
+              <p>Features: Shared timeline, real-time audio, synchronized playback</p>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

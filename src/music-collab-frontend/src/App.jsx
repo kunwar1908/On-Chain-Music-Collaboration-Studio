@@ -86,6 +86,7 @@ function App() {
       if (!actor) throw new Error('No authenticated actor available');
       
       const projectList = await actor.list_projects();
+      console.log('Loaded projects:', projectList);
       setProjects(projectList);
     } catch (error) {
       console.error('Error loading projects:', error);
@@ -112,7 +113,7 @@ function App() {
       alert('Please login first to create a project');
       return;
     }
-    
+
     setLoading(true);
     try {
       console.log('Calling backend create_project...');
@@ -130,6 +131,36 @@ function App() {
     } catch (error) {
       console.error('Error creating project:', error);
       alert('Failed to create project. Please check the console for details.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMintNFT = async (nftData) => {
+    if (!user) {
+      alert('Please login first to mint an NFT');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const actor = authService.getActor();
+      if (!actor) throw new Error('No authenticated actor available');
+      
+      const nftId = await actor.mint_nft(
+        nftData.name,
+        nftData.description,
+        nftData.image_url,
+        nftData.creator,
+        nftData.project_id,
+        nftData.price
+      );
+      console.log('NFT minted with ID:', nftId);
+      await loadNFTs();
+      return nftId;
+    } catch (error) {
+      console.error('Error minting NFT:', error);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -218,6 +249,7 @@ function App() {
             nfts={nfts}
             projects={projects}
             onRefresh={loadNFTs}
+            onMintNFT={handleMintNFT}
             user={user}
           />
         );

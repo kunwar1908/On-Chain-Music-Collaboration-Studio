@@ -1,16 +1,15 @@
 import React from 'react';
 import './NFTCard.css';
 
-const NFTCard = ({ nft, user, onPurchase }) => {
-  const isOwned = nft.creator === user?.principal;
-
-  const handleAction = () => {
-    if (isOwned) {
-      // Show options for owned NFT (list for sale, transfer, etc.)
-      alert('NFT management features coming soon!');
-    } else {
-      onPurchase(nft);
+const NFTCard = ({ nft, project, isOwner, onBuy, onTransfer }) => {
+  const handlePurchase = () => {
+    if (onBuy && !isOwner) {
+      onBuy(nft);
     }
+  };
+
+  const formatPrice = (price) => {
+    return (Number(price) / 1000000).toFixed(2); // Convert from smallest unit to ICP
   };
 
   return (
@@ -19,43 +18,45 @@ const NFTCard = ({ nft, user, onPurchase }) => {
         {nft.image_url ? (
           <img src={nft.image_url} alt={nft.name} />
         ) : (
-          <div className="nft-placeholder">
-            <span className="music-note">🎵</span>
+          <div className="placeholder-image">
+            <span className="music-icon">🎵</span>
           </div>
         )}
-        {isOwned && <div className="owned-badge">Owned</div>}
+        {isOwner && <div className="owner-badge">Owned</div>}
       </div>
       
-      <div className="nft-info">
-        <h3 className="nft-name">{nft.name}</h3>
+      <div className="nft-content">
+        <div className="nft-header">
+          <h3 className="nft-name">{nft.name}</h3>
+          <div className="nft-price">
+            {formatPrice(nft.price)} ICP
+          </div>
+        </div>
+        
         <p className="nft-description">{nft.description}</p>
         
         <div className="nft-meta">
-          <div className="creator">
-            <span className="label">Creator:</span>
-            <span className="value">{nft.creator.slice(0, 8)}...</span>
+          <div className="nft-creator">
+            <strong>Creator:</strong> {nft.creator.slice(0, 8)}...
           </div>
-          <div className="project">
-            <span className="label">Project ID:</span>
-            <span className="value">#{nft.project_id}</span>
-          </div>
-        </div>
-        
-        <div className="nft-price">
-          <span className="price-label">Price:</span>
-          <span className="price-value">{nft.price} ICP</span>
+          {project && (
+            <div className="nft-project">
+              <strong>Project:</strong> {project.title}
+            </div>
+          )}
         </div>
         
         <div className="nft-actions">
-          <button 
-            className={`btn-${isOwned ? 'secondary' : 'primary'} nft-action-btn`}
-            onClick={handleAction}
-          >
-            {isOwned ? '⚙️ Manage' : '🛒 Buy Now'}
-          </button>
-          {!isOwned && (
-            <button className="btn-secondary nft-action-btn">
-              👀 View Details
+          {isOwner ? (
+            <button className="btn-secondary" disabled>
+              You own this NFT
+            </button>
+          ) : (
+            <button 
+              className="btn-primary"
+              onClick={handlePurchase}
+            >
+              Buy for {formatPrice(nft.price)} ICP
             </button>
           )}
         </div>

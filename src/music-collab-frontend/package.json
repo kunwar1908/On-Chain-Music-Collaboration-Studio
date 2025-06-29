@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "@dfinity/agent": "^2.1.3",
-    "@dfinity/auth-client": "^2.1.3",
     "@dfinity/candid": "^2.1.3",
     "@dfinity/principal": "^2.1.3",
     "react": "^18.2.0",
@@ -27,7 +26,7 @@
   "scripts": {
     "build": "tsc && vite build",
     "format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\"",
-    "prebuild": "dfx generate",
+    "prebuild": "dfx generate music-collab-backend",
     "setup": "npm i && dfx canister create music-collab-backend && dfx generate music-collab-backend && dfx deploy",
     "start": "vite --port 3000",
     "test": "vitest run"

@@ -4,6 +4,22 @@
   gap: 1rem;
 }
 
+/* Current player section */
+.current-player {
+  background: rgba(76, 175, 80, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border: 2px solid rgba(76, 175, 80, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.current-player .audio-player {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
 .empty-tracks {
   text-align: center;
   padding: 2rem;
@@ -31,6 +47,17 @@
   transform: translateY(-2px);
 }
 
+/* Current track highlighting */
+.track-item.current-track {
+  background: rgba(76, 175, 80, 0.15);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.2);
+}
+
+.track-item.current-track:hover {
+  background: rgba(76, 175, 80, 0.2);
+}
+
 .track-info {
   flex: 1;
 }
@@ -40,6 +67,24 @@
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.playing-indicator {
+  color: #4CAF50;
+  font-size: 1.2rem;
+  animation: pulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.6;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .track-meta {
@@ -66,6 +111,55 @@
   transition: all 0.3s ease;
 }
 
+.btn-play {
+  background: #4CAF50;
+  color: white;
+}
+
+.btn-play:hover {
+  background: #45a049;
+  transform: translateY(-1px);
+}
+
+.btn-play.playing {
+  background: #FF9800;
+  animation: playing-pulse 2s ease-in-out infinite;
+}
+
+@keyframes playing-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(255, 152, 0, 0);
+  }
+}
+
+.btn-download {
+  background: #2196F3;
+  color: white;
+}
+
+.btn-download:hover {
+  background: #1976D2;
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: #f44336;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #d32f2f;
+  transform: translateY(-1px);
+}
+
+.btn-small {
+  padding: 4px 8px;
+  font-size: 0.7rem;
+}
+
 @media (max-width: 768px) {
   .track-item {
     flex-direction: column;
@@ -80,5 +174,9 @@
   
   .track-meta {
     font-size: 0.8rem;
+  }
+  
+  .current-player {
+    padding: 1rem;
   }
 }
