@@ -1,12 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './TrackUpload.css';
 
-const TrackUpload = ({ onSubmit, onCancel, loading }) => {
+const TrackUpload = ({ project, user, onSubmit, onCancel, loading }) => {
   const [trackData, setTrackData] = useState({
     name: '',
     uploadedBy: '',
     ipfsHash: ''
   });
+
+  // Auto-fill user information
+  useEffect(() => {
+    if (user && !trackData.uploadedBy) {
+      setTrackData(prev => ({
+        ...prev,
+        uploadedBy: user.principal || user.name || 'Anonymous User'
+      }));
+    }
+  }, [user, trackData.uploadedBy]);
 
   const handleChange = (e) => {
     setTrackData({
@@ -39,6 +49,11 @@ const TrackUpload = ({ onSubmit, onCancel, loading }) => {
     <div className="track-upload">
       <div className="upload-header">
         <h4>Upload New Track</h4>
+        {project && (
+          <p className="project-info">
+            Adding track to: <strong>{project.title}</strong>
+          </p>
+        )}
       </div>
       
       <form onSubmit={handleSubmit} className="upload-form">

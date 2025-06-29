@@ -86,8 +86,12 @@ function App() {
       if (!actor) throw new Error('No authenticated actor available');
       
       const projectList = await actor.list_projects();
-      console.log('Loaded projects:', projectList);
       setProjects(projectList);
+      
+      // Auto-select project if only one exists and none is currently selected
+      if (projectList.length === 1 && !selectedProject) {
+        setSelectedProject(projectList[0]);
+      }
     } catch (error) {
       console.error('Error loading projects:', error);
       setProjects([]);
@@ -108,7 +112,6 @@ function App() {
   };
 
   const handleCreateProject = async (projectData) => {
-    console.log('handleCreateProject called with:', projectData);
     if (!user) {
       alert('Please login first to create a project');
       return;
@@ -116,7 +119,6 @@ function App() {
 
     setLoading(true);
     try {
-      console.log('Calling backend create_project...');
       const actor = authService.getActor();
       if (!actor) throw new Error('No authenticated actor available');
       
@@ -125,7 +127,6 @@ function App() {
         projectData.description,
         projectData.owner
       );
-      console.log('Project created with ID:', projectId);
       await loadProjects();
       setCurrentView('projects');
     } catch (error) {
@@ -155,7 +156,6 @@ function App() {
         nftData.project_id,
         nftData.price
       );
-      console.log('NFT minted with ID:', nftId);
       await loadNFTs();
       return nftId;
     } catch (error) {
@@ -249,6 +249,7 @@ function App() {
             nfts={nfts}
             projects={projects}
             onRefresh={loadNFTs}
+            onRefreshProjects={loadProjects} // Add projects refresh
             onMintNFT={handleMintNFT}
             user={user}
           />

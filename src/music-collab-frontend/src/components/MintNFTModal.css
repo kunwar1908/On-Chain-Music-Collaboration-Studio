@@ -75,12 +75,39 @@
 .form-group select {
   width: 100%;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
-  color: #e2e8f0;
+  color: #f8fafc;
   font-size: 14px;
   transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+/* Special styling for project select dropdown */
+.project-select {
+  background: rgba(30, 41, 59, 0.95) !important;
+  color: #f8fafc !important;
+  border: 2px solid rgba(59, 130, 246, 0.4) !important;
+}
+
+.project-select option {
+  background: rgba(30, 41, 59, 0.95) !important;
+  color: #f8fafc !important;
+  padding: 8px 12px;
+  border: none;
+}
+
+.project-select option:hover,
+.project-select option:focus,
+.project-select option:checked {
+  background: rgba(59, 130, 246, 0.8) !important;
+  color: #ffffff !important;
+}
+
+.project-select option[disabled] {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #fca5a5 !important;
 }
 
 .form-group input:focus,
@@ -106,6 +133,21 @@
 
 .helper-text {
   color: #fbbf24;
+  font-size: 12px;
+  margin-top: 10px;
+  padding: 12px;
+  background: rgba(251, 191, 36, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.helper-text p {
+  margin: 0 0 8px 0;
+  color: #fbbf24;
+}
+
+.helper-text .btn-secondary.small {
+  padding: 6px 12px;
   font-size: 12px;
   margin-top: 5px;
 }

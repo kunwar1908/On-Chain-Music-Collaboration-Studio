@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { authService } from '../services/auth';
 import ChatWindow from './ChatWindow';
 import SessionManager from './SessionManager';
 import RoyaltyManager from './RoyaltyManager';
@@ -7,6 +8,42 @@ import './CollaborationHub.css';
 
 const CollaborationHub = ({ project, onBack, user }) => {
   const [activeTab, setActiveTab] = useState('session'); // 'session', 'chat', 'upload', 'royalties'
+  const [loading, setLoading] = useState(false);
+
+  const handleTrackUpload = async (trackData) => {
+    if (!user || !project) {
+      alert('Please login and select a project first');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const actor = authService.getActor();
+      if (!actor) throw new Error('No authenticated actor available');
+      
+      // Add track to the project using the existing backend function
+      const success = await actor.add_track(
+        project.id,
+        trackData.name,
+        trackData.ipfsHash,
+        trackData.uploadedBy,
+        Date.now() * 1000000 // Convert to nanoseconds for IC timestamp
+      );
+      
+      if (success) {
+        alert('Track uploaded successfully!');
+        // Reset the active tab to show the session view
+        setActiveTab('session');
+      } else {
+        throw new Error('Failed to add track to project');
+      }
+    } catch (error) {
+      console.error('Error uploading track:', error);
+      alert('Failed to upload track. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!project) {
     return (
@@ -35,7 +72,15 @@ const CollaborationHub = ({ project, onBack, user }) => {
       case 'chat':
         return <ChatWindow project={project} user={user} />;
       case 'upload':
-        return <TrackUpload project={project} user={user} />;
+        return (
+          <TrackUpload 
+            project={project} 
+            user={user} 
+            onSubmit={handleTrackUpload}
+            onCancel={() => setActiveTab('session')}
+            loading={loading}
+          />
+        );
       case 'royalties':
         return <RoyaltyManager project={project} user={user} />;
       default:

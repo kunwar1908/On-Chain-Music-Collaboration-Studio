@@ -4,7 +4,7 @@ import MintNFTModal from './MintNFTModal';
 import WaveformNFTModal from './WaveformNFTModal';
 import './NFTMarketplace.css';
 
-const NFTMarketplace = ({ nfts, projects, onRefresh, onMintNFT, user }) => {
+const NFTMarketplace = ({ nfts, projects, onRefresh, onRefreshProjects, onMintNFT, user }) => {
   const [showMintModal, setShowMintModal] = useState(false);
   const [showWaveformModal, setShowWaveformModal] = useState(false);
   const [filter, setFilter] = useState('all'); // 'all', 'my', 'available'
@@ -108,6 +108,7 @@ const NFTMarketplace = ({ nfts, projects, onRefresh, onMintNFT, user }) => {
           projects={projects}
           onSubmit={handleMintNFT}
           onClose={() => setShowMintModal(false)}
+          onRefreshProjects={onRefreshProjects}
           user={user}
         />
       )}
@@ -117,6 +118,7 @@ const NFTMarketplace = ({ nfts, projects, onRefresh, onMintNFT, user }) => {
           projects={projects}
           onSubmit={handleMintNFT}
           onClose={() => setShowWaveformModal(false)}
+          onRefreshProjects={onRefreshProjects}
           user={user}
         />
       )}

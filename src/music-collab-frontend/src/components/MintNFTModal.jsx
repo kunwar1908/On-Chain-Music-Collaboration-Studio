@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './MintNFTModal.css';
 
-const MintNFTModal = ({ projects, onSubmit, onClose, user }) => {
+const MintNFTModal = ({ projects, onSubmit, onClose, onRefreshProjects, user }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -10,7 +10,15 @@ const MintNFTModal = ({ projects, onSubmit, onClose, user }) => {
     price: ''
   });
 
-  console.log('MintNFTModal received projects:', projects);
+  // Auto-select project if only one exists
+  useEffect(() => {
+    if (projects && projects.length === 1 && !formData.projectId) {
+      setFormData(prev => ({
+        ...prev,
+        projectId: String(projects[0].id || 0)
+      }));
+    }
+  }, [projects, formData.projectId]);
 
   const handleChange = (e) => {
     setFormData({
@@ -27,10 +35,11 @@ const MintNFTModal = ({ projects, onSubmit, onClose, user }) => {
         description: formData.description,
         image_url: formData.imageUrl || `https://picsum.photos/400/400?random=${Date.now()}`,
         creator: user?.principal || 'anonymous',
-        project_id: parseInt(formData.projectId),
-        price: parseInt(formData.price) * 1000000 // Convert ICP to smallest unit
+        project_id: Number(formData.projectId), // Ensure it's a number
+        price: Math.round(parseFloat(formData.price) * 1000000) // Convert ICP to smallest unit
       };
       onSubmit(nftData);
+    } else {
     }
   };
 
@@ -77,25 +86,52 @@ const MintNFTModal = ({ projects, onSubmit, onClose, user }) => {
               value={formData.projectId}
               onChange={handleChange}
               required
+              className="project-select"
             >
               <option value="">Select a project</option>
-              {projects && projects.length > 0 ? (
-                projects.map(project => (
-                  <option key={project.id} value={project.id}>
-                    {project.title}
-                  </option>
-                ))
+              {Array.isArray(projects) && projects.length > 0 ? (
+                projects.map((project, index) => {
+                  const projectId = project.id !== undefined ? String(project.id) : String(index);
+                  const projectTitle = project.title || `Project ${index + 1}`;
+                  return (
+                    <option key={projectId} value={projectId}>
+                      {projectTitle}
+                    </option>
+                  );
+                })
               ) : (
-                <option value="" disabled>No projects available - Create a project first</option>
+                <option value="" disabled style={{color: '#fca5a5'}}>
+                  No projects available - Create a project first
+                </option>
               )}
             </select>
-            {(!projects || projects.length === 0) && (
-              <small className="helper-text">
-                You need to create a music project first before minting NFTs. 
-                <a href="#" onClick={(e) => { e.preventDefault(); onClose(); }}>
-                  Go to Projects
-                </a>
-              </small>
+            {(!Array.isArray(projects) || projects.length === 0) && (
+              <div className="helper-text">
+                <p>⚠️ You need to create a music project first before minting NFTs.</p>
+                <p>Projects loaded: {Array.isArray(projects) ? projects.length : 'Not loaded'}</p>
+                <div style={{display: 'flex', gap: '10px', marginTop: '10px'}}>
+                  <button 
+                    type="button" 
+                    className="btn-secondary small"
+                    onClick={(e) => { e.preventDefault(); onClose(); }}
+                  >
+                    Go to Projects
+                  </button>
+                  {onRefreshProjects && (
+                    <button 
+                      type="button" 
+                      className="btn-secondary small"
+                      onClick={async (e) => { 
+                        e.preventDefault(); 
+                        console.log('Refreshing projects...');
+                        await onRefreshProjects();
+                      }}
+                    >
+                      🔄 Refresh Projects
+                    </button>
+                  )}
+                </div>
+              </div>
             )}
           </div>
 

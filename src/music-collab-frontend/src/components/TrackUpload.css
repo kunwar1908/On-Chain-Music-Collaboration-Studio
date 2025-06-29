@@ -13,6 +13,20 @@
   margin-bottom: 1rem;
 }
 
+.upload-header .project-info {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid #4CAF50;
+}
+
+.upload-header .project-info strong {
+  color: #4CAF50;
+}
+
 .upload-form {
   display: flex;
   flex-direction: column;

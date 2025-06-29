@@ -117,85 +117,41 @@
 .form-group textarea,
 .form-group select {
   width: 100%;
-  padding: 0.75rem;
+  padding: 12px;
+  background: rgba(30, 41, 59, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  font-size: 1rem;
+  border-radius: 8px;
+  color: #f8fafc;
+  font-size: 14px;
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+  box-sizing: border-box;
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
-  background: rgba(255, 255, 255, 0.15);
+.project-select {
+  background: rgba(30, 41, 59, 0.95) !important;
+  color: #f8fafc !important;
+  border: 2px solid rgba(59, 130, 246, 0.4) !important;
 }
 
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+.project-select option {
+  background: rgba(30, 41, 59, 0.95) !important;
+  color: #f8fafc !important;
+  padding: 8px 12px;
+  border: none;
 }
 
-/* Audio Upload Section */
-.audio-upload {
-  display: flex;
-  justify-content: center;
-  margin: 2rem 0;
+.project-select option:hover,
+.project-select option:focus,
+.project-select option:checked {
+  background: rgba(59, 130, 246, 0.8) !important;
+  color: #ffffff !important;
 }
 
-.upload-area {
-  width: 100%;
-  max-width: 400px;
+.project-select option[disabled] {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #fca5a5 !important;
 }
 
-.file-input {
-  display: none;
-}
-
-.upload-label {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 2rem;
-  border: 2px dashed rgba(255, 255, 255, 0.3);
-  border-radius: 15px;
-  background: rgba(255, 255, 255, 0.05);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-}
-
-.upload-label:hover {
-  border-color: #667eea;
-  background: rgba(102, 126, 234, 0.1);
-  transform: translateY(-2px);
-}
-
-.upload-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  opacity: 0.7;
-}
-
-.upload-label p {
-  color: #ffffff;
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.upload-label small {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-}
-
-/* Step Actions */
 .step-actions {
   display: flex;
   justify-content: space-between;

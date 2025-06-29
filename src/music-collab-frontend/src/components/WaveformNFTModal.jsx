@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import WaveformGenerator from './WaveformGenerator';
 import './WaveformNFTModal.css';
 
@@ -13,7 +13,15 @@ const WaveformNFTModal = ({ projects, onSubmit, onClose, user }) => {
   const [waveformImage, setWaveformImage] = useState(null);
   const [step, setStep] = useState(1); // 1: Form, 2: Audio Upload, 3: Waveform
 
-  console.log('WaveformNFTModal received projects:', projects);
+  // Auto-select project if only one exists
+  useEffect(() => {
+    if (projects && projects.length === 1 && !formData.projectId) {
+      setFormData(prev => ({
+        ...prev,
+        projectId: String(projects[0].id || 0)
+      }));
+    }
+  }, [projects, formData.projectId]);
 
   const handleChange = (e) => {
     setFormData({
@@ -48,7 +56,7 @@ const WaveformNFTModal = ({ projects, onSubmit, onClose, user }) => {
         image_url: waveformImage,
         creator: user?.principal || 'anonymous',
         project_id: parseInt(formData.projectId),
-        price: parseInt(formData.price) * 1000000 // Convert ICP to smallest unit
+        price: Math.round(parseFloat(formData.price) * 1000000) // Convert ICP to smallest unit
       };
       onSubmit(nftData);
     }
@@ -94,14 +102,19 @@ const WaveformNFTModal = ({ projects, onSubmit, onClose, user }) => {
                 value={formData.projectId}
                 onChange={handleChange}
                 required
+                className="project-select"
               >
                 <option value="">Select a project</option>
                 {projects && projects.length > 0 ? (
-                  projects.map(project => (
-                    <option key={project.id} value={project.id}>
-                      {project.title}
-                    </option>
-                  ))
+                  projects.map((project, index) => {
+                    const projectId = project.id !== undefined ? String(project.id) : String(index);
+                    const projectTitle = project.title || `Project ${index + 1}`;
+                    return (
+                      <option key={projectId} value={projectId}>
+                        {projectTitle}
+                      </option>
+                    );
+                  })
                 ) : (
                   <option value="" disabled>No projects available - Create a project first</option>
                 )}
