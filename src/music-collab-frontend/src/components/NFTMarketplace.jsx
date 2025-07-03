@@ -8,6 +8,8 @@ const NFTMarketplace = ({ nfts, projects, onRefresh, onRefreshProjects, onMintNF
   const [showMintModal, setShowMintModal] = useState(false);
   const [showWaveformModal, setShowWaveformModal] = useState(false);
   const [filter, setFilter] = useState('all'); // 'all', 'my', 'available'
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [successData, setSuccessData] = useState(null);
 
   console.log('NFTMarketplace received projects:', projects);
 
@@ -24,8 +26,26 @@ const NFTMarketplace = ({ nfts, projects, onRefresh, onRefreshProjects, onMintNF
 
   const handleMintNFT = async (nftData) => {
     try {
-      await onMintNFT(nftData);
+      const nftId = await onMintNFT(nftData);
+      const isAudioNFT = showWaveformModal; // Determine if it's an audio NFT
+      
       setShowMintModal(false);
+      setShowWaveformModal(false);
+      
+      // Show success message
+      setSuccessData({
+        name: nftData.name,
+        id: nftId,
+        type: isAudioNFT ? 'Audio NFT' : 'NFT'
+      });
+      setShowSuccessMessage(true);
+      
+      // Hide success message after 6 seconds (longer for audio NFTs)
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+        setSuccessData(null);
+      }, 6000);
+      
       onRefresh();
     } catch (error) {
       console.error('Error minting NFT:', error);
@@ -35,6 +55,32 @@ const NFTMarketplace = ({ nfts, projects, onRefresh, onRefreshProjects, onMintNF
 
   return (
     <div className="nft-marketplace">
+      {showSuccessMessage && successData && (
+        <div className="nft-success-message">
+          <div className="success-icon">
+            {successData.type === 'Audio NFT' ? '�' : '�🎉'}
+          </div>
+          <div className="success-content">
+            <h4>{successData.type} Minted Successfully!</h4>
+            <p>
+              <strong>"{successData.name}"</strong> has been minted and added to the marketplace!
+              {successData.type === 'Audio NFT' && ' Your waveform visualization is now a unique digital asset.'}
+            </p>
+            <small>NFT ID: {successData.id}</small>
+          </div>
+          <button 
+            className="success-dismiss"
+            onClick={() => {
+              setShowSuccessMessage(false);
+              setSuccessData(null);
+            }}
+            title="Dismiss"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+      
       <div className="marketplace-header">
         <h2>🎵 Music NFT Marketplace</h2>
         <div className="marketplace-actions">

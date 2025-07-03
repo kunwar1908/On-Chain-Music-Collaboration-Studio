@@ -8,10 +8,12 @@ const WaveformNFTModal = ({ projects, onSubmit, onClose, user }) => {
     description: '',
     projectId: '',
     price: '',
-    audioFile: null
+    audioFile: null,
+    waveformStyle: 'gradient'
   });
   const [waveformImage, setWaveformImage] = useState(null);
   const [step, setStep] = useState(1); // 1: Form, 2: Audio Upload, 3: Waveform
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   // Auto-select project if only one exists
   useEffect(() => {
@@ -22,6 +24,54 @@ const WaveformNFTModal = ({ projects, onSubmit, onClose, user }) => {
       }));
     }
   }, [projects, formData.projectId]);
+
+  const waveformStyles = [
+    // Classic Styles
+    { value: 'gradient', name: 'Gradient Bars', description: 'Colorful gradient bars with glow effect' },
+    { value: 'neon', name: 'Neon Pulse', description: 'Electric neon waveform with pulse effect' },
+    { value: 'minimal', name: 'Minimal Lines', description: 'Clean minimal line waveform' },
+    { value: 'vintage', name: 'Vintage Vinyl', description: 'Retro vinyl record style' },
+    { value: 'spectrum', name: 'Frequency Spectrum', description: 'Audio frequency spectrum visualization' },
+    { value: 'glitch', name: 'Digital Glitch', description: 'Cyberpunk glitch art style' },
+    
+    // Artistic Styles
+    { value: 'watercolor', name: 'Watercolor Splash', description: 'Artistic watercolor paint effect' },
+    { value: 'crystalline', name: 'Crystal Formation', description: 'Geometric crystal-like structures' },
+    { value: 'organic', name: 'Organic Flow', description: 'Natural flowing organic shapes' },
+    { value: 'holographic', name: 'Holographic Foil', description: 'Iridescent holographic effect' },
+    { value: 'plasma', name: 'Plasma Energy', description: 'Electric plasma energy waves' },
+    { value: 'galaxy', name: 'Galaxy Nebula', description: 'Cosmic nebula with stars' },
+    
+    // Geometric Styles
+    { value: 'geometric', name: 'Sacred Geometry', description: 'Mathematical geometric patterns' },
+    { value: 'hexagonal', name: 'Hexagon Grid', description: 'Honeycomb hexagonal pattern' },
+    { value: 'triangular', name: 'Triangle Mosaic', description: 'Triangular mosaic composition' },
+    { value: 'circular', name: 'Circular Waves', description: 'Concentric circular patterns' },
+    
+    // Nature-Inspired
+    { value: 'mountain', name: 'Mountain Range', description: 'Mountain silhouette landscape' },
+    { value: 'ocean', name: 'Ocean Waves', description: 'Fluid ocean wave motion' },
+    { value: 'forest', name: 'Forest Canopy', description: 'Tree canopy silhouettes' },
+    { value: 'aurora', name: 'Aurora Borealis', description: 'Northern lights effect' },
+    
+    // Futuristic Styles
+    { value: 'matrix', name: 'Digital Matrix', description: 'Matrix-style digital rain' },
+    { value: 'cyberpunk', name: 'Cyberpunk Grid', description: 'Futuristic grid overlay' },
+    { value: 'neural', name: 'Neural Network', description: 'Brain synapse connections' },
+    { value: 'quantum', name: 'Quantum Field', description: 'Quantum particle field' },
+    
+    // Abstract Art
+    { value: 'abstract', name: 'Abstract Art', description: 'Abstract expressionist style' },
+    { value: 'fractal', name: 'Fractal Pattern', description: 'Mathematical fractal design' },
+    { value: 'mandala', name: 'Mandala Circle', description: 'Spiritual mandala pattern' },
+    { value: 'kaleidoscope', name: 'Kaleidoscope', description: 'Symmetrical kaleidoscope view' },
+    
+    // Vintage & Retro
+    { value: 'retro80s', name: 'Retro 80s', description: 'Synthwave retro aesthetic' },
+    { value: 'artdeco', name: 'Art Deco', description: '1920s art deco styling' },
+    { value: 'steampunk', name: 'Steampunk', description: 'Victorian steampunk design' },
+    { value: 'psychedelic', name: 'Psychedelic', description: '60s psychedelic art' }
+  ];
 
   const handleChange = (e) => {
     setFormData({
@@ -45,6 +95,12 @@ const WaveformNFTModal = ({ projects, onSubmit, onClose, user }) => {
 
   const handleWaveformGenerated = (imageUrl) => {
     setWaveformImage(imageUrl);
+    setShowSuccessMessage(true);
+    
+    // Hide success message after 5 seconds (increased from 3 seconds)
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 5000);
   };
 
   const handleSubmit = (e) => {
@@ -164,6 +220,28 @@ const WaveformNFTModal = ({ projects, onSubmit, onClose, user }) => {
         return (
           <div className="step-content">
             <h3>🎵 Create Audio NFT - Step 2</h3>
+            
+            <div className="waveform-style-selection">
+              <h4>Choose Waveform Style</h4>
+              <div className="style-grid">
+                {waveformStyles.map((style) => (
+                  <div 
+                    key={style.value}
+                    className={`style-option ${formData.waveformStyle === style.value ? 'selected' : ''}`}
+                    onClick={() => setFormData({...formData, waveformStyle: style.value})}
+                  >
+                    <div className="style-preview">
+                      <div className={`preview-${style.value}`}></div>
+                    </div>
+                    <div className="style-info">
+                      <h5>{style.name}</h5>
+                      <small>{style.description}</small>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
             <div className="audio-upload">
               <div className="upload-area">
                 <input
@@ -193,10 +271,44 @@ const WaveformNFTModal = ({ projects, onSubmit, onClose, user }) => {
         return (
           <div className="step-content">
             <h3>🎵 Create Audio NFT - Step 3</h3>
+            
+            {showSuccessMessage && (
+              <div className="success-message">
+                <div className="success-icon">✨</div>
+                <div className="success-text">
+                  <h4>Waveform Generated Successfully!</h4>
+                  <p>Your audio visualization is ready. You can now mint your NFT!</p>
+                </div>
+                <button 
+                  className="success-dismiss"
+                  onClick={() => setShowSuccessMessage(false)}
+                  title="Dismiss"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+            
             <WaveformGenerator
               audioFile={formData.audioFile}
+              waveformStyle={formData.waveformStyle}
               onWaveformGenerated={handleWaveformGenerated}
             />
+
+            <div className="style-controls">
+              <label>Change Style:</label>
+              <select 
+                value={formData.waveformStyle} 
+                onChange={(e) => setFormData({...formData, waveformStyle: e.target.value})}
+                className="style-selector"
+              >
+                {waveformStyles.map((style) => (
+                  <option key={style.value} value={style.value}>
+                    {style.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             <div className="step-actions">
               <button type="button" className="btn-secondary" onClick={() => setStep(2)}>
