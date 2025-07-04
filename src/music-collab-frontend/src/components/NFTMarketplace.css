@@ -1,7 +1,7 @@
 /* NFT Marketplace Styles - OpenSea Inspired */
 .nft-marketplace {
-  padding: 2rem 0;
-  max-width: 1400px;
+  padding: 1.5rem 0;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -9,14 +9,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 1rem;
   padding: 0 1rem;
 }
 
 .marketplace-header h2 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: var(--text-primary);
   margin: 0;
   font-weight: 700;
@@ -46,14 +46,14 @@
 }
 
 .filter-tab {
-  padding: 1rem 1.5rem;
+  padding: 0.8rem 1.2rem;
   border: none;
   background: transparent;
   color: var(--text-secondary);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 10px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
   position: relative;

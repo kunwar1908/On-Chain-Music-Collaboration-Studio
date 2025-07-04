@@ -2,7 +2,7 @@
 .navigation {
   background: linear-gradient(145deg, var(--background-primary), var(--background-secondary));
   border-bottom: 2px solid var(--border-color);
-  padding: 1rem 2rem;
+  padding: 0.8rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -18,7 +18,7 @@
 .nav-brand {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
   font-weight: 800;
   color: var(--text-primary);
   text-decoration: none;
@@ -30,7 +30,7 @@
 }
 
 .nav-logo {
-  font-size: 2rem;
+  font-size: 1.6rem;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -38,7 +38,7 @@
 }
 
 .nav-title {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -48,23 +48,23 @@
 
 .nav-items {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.5rem;
   align-items: center;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.75rem 1.25rem;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
   border: 1px solid transparent;
   background: transparent;
   color: var(--text-secondary);
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   position: relative;
   text-decoration: none;
 }

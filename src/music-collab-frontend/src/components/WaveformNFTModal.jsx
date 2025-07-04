@@ -242,20 +242,22 @@ const WaveformNFTModal = ({ projects, onSubmit, onClose, user }) => {
               </div>
             </div>
             
-            <div className="audio-upload">
-              <div className="upload-area">
-                <input
-                  type="file"
-                  id="audioFile"
-                  accept="audio/*"
-                  onChange={handleFileChange}
-                  className="file-input"
-                />
-                <label htmlFor="audioFile" className="upload-label">
-                  <div className="upload-icon">🎵</div>
-                  <p>Click to upload audio file</p>
-                  <small>Supports MP3, WAV, M4A formats</small>
-                </label>
+            <div className="audio-upload-container">
+              <div className="audio-upload">
+                <div className="upload-area">
+                  <input
+                    type="file"
+                    id="audioFile"
+                    accept="audio/*"
+                    onChange={handleFileChange}
+                    className="file-input"
+                  />
+                  <label htmlFor="audioFile" className="upload-label">
+                    <div className="upload-icon">🎵</div>
+                    <p>Click to upload audio file</p>
+                    <small>Supports MP3, WAV, M4A formats</small>
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -295,19 +297,24 @@ const WaveformNFTModal = ({ projects, onSubmit, onClose, user }) => {
               onWaveformGenerated={handleWaveformGenerated}
             />
 
-            <div className="style-controls">
-              <label>Change Style:</label>
-              <select 
-                value={formData.waveformStyle} 
-                onChange={(e) => setFormData({...formData, waveformStyle: e.target.value})}
-                className="style-selector"
-              >
-                {waveformStyles.map((style) => (
-                  <option key={style.value} value={style.value}>
-                    {style.name}
-                  </option>
-                ))}
-              </select>
+            <div className="style-controls-container">
+              <div className="style-controls">
+                <label className="style-label">
+                  <span className="style-icon">🎨</span>
+                  Change Style:
+                </label>
+                <select 
+                  value={formData.waveformStyle} 
+                  onChange={(e) => setFormData({...formData, waveformStyle: e.target.value})}
+                  className="style-selector"
+                >
+                  {waveformStyles.map((style) => (
+                    <option key={style.value} value={style.value}>
+                      {style.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <div className="step-actions">

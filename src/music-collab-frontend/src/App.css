@@ -63,8 +63,8 @@ body {
 }
 
 .App-header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+  margin-bottom: 0.3rem;
   font-weight: 700;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
@@ -73,7 +73,7 @@ body {
 }
 
 .App-header p {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: var(--text-secondary);
 }
 
@@ -91,8 +91,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 90vh;
-  padding: 2rem;
+  min-height: 85vh;
+  padding: 1.5rem;
   background: var(--gradient-background);
   position: relative;
 }
@@ -112,22 +112,22 @@ body {
 
 .login-content {
   text-align: center;
-  max-width: 600px;
-  padding: 4rem 3rem;
+  max-width: 500px;
+  padding: 2.5rem 2rem;
   background: linear-gradient(145deg, var(--background-secondary), var(--background-tertiary));
-  border-radius: 24px;
+  border-radius: 20px;
   border: 2px solid var(--border-color);
   box-shadow: 
-    0 25px 80px var(--shadow-heavy),
-    0 0 60px rgba(0, 255, 255, 0.1),
+    0 20px 60px var(--shadow-heavy),
+    0 0 40px rgba(0, 255, 255, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   position: relative;
   backdrop-filter: blur(10px);
 }
 
 .login-content h1 {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -137,26 +137,26 @@ body {
 }
 
 .login-content > p {
-  font-size: 1.3rem;
-  margin-bottom: 3rem;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
   color: var(--text-secondary);
   line-height: 1.6;
 }
 
 .login-features {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .feature {
-  padding: 2rem 1.5rem;
+  padding: 1.5rem 1rem;
   background: linear-gradient(145deg, var(--background-primary), var(--background-secondary));
-  border-radius: 16px;
+  border-radius: 12px;
   border: 1px solid var(--border-color);
   transition: all 0.3s ease;
-  box-shadow: 0 8px 25px var(--shadow-light);
+  box-shadow: 0 6px 20px var(--shadow-light);
 }
 
 .feature:hover {
@@ -168,21 +168,21 @@ body {
 }
 
 .feature h3 {
-  font-size: 1.2rem;
-  margin-bottom: 0.8rem;
+  font-size: 1rem;
+  margin-bottom: 0.6rem;
   color: var(--text-primary);
   font-weight: 700;
 }
 
 .feature p {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
   line-height: 1.5;
 }
 
 .login-btn {
-  font-size: 1.1rem !important;
-  padding: 1rem 2.5rem !important;
+  font-size: 1rem !important;
+  padding: 0.8rem 2rem !important;
   background: linear-gradient(145deg, var(--primary-cyan), var(--primary-cyan-hover)) !important;
   color: #000000 !important;
   border: 2px solid var(--primary-cyan) !important;
@@ -223,14 +223,14 @@ body {
 
 .dashboard-header {
   text-align: center;
-  margin-bottom: 4rem;
-  padding: 2rem 0;
+  margin-bottom: 2.5rem;
+  padding: 1.5rem 0;
   position: relative;
 }
 
 .dashboard-header h1 {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -240,31 +240,31 @@ body {
 }
 
 .dashboard-header p {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   color: var(--text-secondary);
-  max-width: 600px;
+  max-width: 500px;
   margin: 0 auto;
 }
 
 .dashboard-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  margin-bottom: 4rem;
-  max-width: 1000px;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  max-width: 800px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .stat-card {
   background: linear-gradient(145deg, var(--background-secondary), var(--background-tertiary));
-  border-radius: 20px;
-  padding: 3rem 2rem;
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
   text-align: center;
   border: 2px solid var(--border-color);
   box-shadow: 
-    0 8px 32px var(--shadow-medium),
-    0 0 20px rgba(0, 255, 255, 0.1),
+    0 6px 24px var(--shadow-medium),
+    0 0 15px rgba(0, 255, 255, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   transition: all 0.3s ease;
   position: relative;
@@ -298,8 +298,8 @@ body {
 }
 
 .stat-card h3 {
-  font-size: 3.5rem;
-  margin-bottom: 0.8rem;
+  font-size: 2.5rem;
+  margin-bottom: 0.6rem;
   color: var(--text-primary);
   font-weight: 800;
   background: var(--gradient-primary);
@@ -309,7 +309,7 @@ body {
 }
 
 .stat-card p {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: var(--text-secondary);
   font-weight: 500;
 }
@@ -370,19 +370,19 @@ body {
 
 /* Dark Futuristic Buttons */
 .btn-primary, .btn-secondary, .btn-danger {
-  padding: 0.9rem 2rem;
+  padding: 0.7rem 1.5rem;
   border: 2px solid;
-  border-radius: 12px;
+  border-radius: 10px;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  min-height: 48px;
+  gap: 0.5rem;
+  min-height: 40px;
   position: relative;
   overflow: hidden;
   text-transform: uppercase;
@@ -464,10 +464,10 @@ body {
 }
 
 .large {
-  padding: 1.2rem 2.5rem;
-  font-size: 1.2rem;
-  border-radius: 16px;
-  min-height: 56px;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  border-radius: 12px;
+  min-height: 44px;
   font-weight: 700;
 }
 
@@ -760,28 +760,28 @@ body {
 .waveform-success, .mint-success, .upload-success, .creation-success {
   background: linear-gradient(145deg, rgba(0, 255, 136, 0.5), rgba(0, 255, 255, 0.4));
   border: 4px solid rgba(0, 255, 136, 1);
-  border-radius: 20px;
-  padding: 1.8rem 2.5rem;
-  margin: 1.5rem 0;
+  border-radius: 16px;
+  padding: 1.2rem 1.8rem;
+  margin: 1rem 0;
   color: #ffffff;
   font-weight: 800;
-  font-size: 1.2rem;
+  font-size: 1rem;
   position: relative;
   backdrop-filter: blur(25px);
   box-shadow: 
-    0 20px 80px rgba(0, 255, 136, 0.9),
-    0 0 100px rgba(0, 255, 136, 0.7),
-    0 0 150px rgba(0, 255, 136, 0.5),
-    0 0 200px rgba(0, 255, 136, 0.3),
-    inset 0 4px 0 rgba(255, 255, 255, 0.4),
+    0 15px 60px rgba(0, 255, 136, 0.9),
+    0 0 80px rgba(0, 255, 136, 0.7),
+    0 0 120px rgba(0, 255, 136, 0.5),
+    0 0 160px rgba(0, 255, 136, 0.3),
+    inset 0 3px 0 rgba(255, 255, 255, 0.4),
     inset 0 -2px 0 rgba(0, 0, 0, 0.2);
   animation: megaSuccessGlow 1.2s ease-in-out infinite alternate;
   text-shadow: 
-    0 0 20px rgba(0, 255, 136, 1),
-    0 0 40px rgba(0, 255, 136, 0.8),
+    0 0 15px rgba(0, 255, 136, 1),
+    0 0 30px rgba(0, 255, 136, 0.8),
     0 2px 4px rgba(0, 0, 0, 0.3);
   z-index: 1001;
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(-6px) scale(1.01);
   border-image: linear-gradient(45deg, rgba(0, 255, 136, 1), rgba(0, 255, 255, 1)) 1;
 }
 
