@@ -1,18 +1,17 @@
-/* Audio Player Styles */
+/* Audio Player Styles - OpenSea Inspired */
 .audio-player {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(15px);
-  border-radius: 15px;
-  padding: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--background-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: 1.25rem;
+  border: 1px solid var(--border-light);
   margin: 1rem 0;
   transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
 }
 
 .audio-player:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-medium);
 }
 
 .player-main {
@@ -25,6 +24,7 @@
 .player-controls {
   display: flex;
   gap: 0.5rem;
+  align-items: center;
 }
 
 .play-btn, .stop-btn {
@@ -32,7 +32,7 @@
   height: 48px;
   border: none;
   border-radius: 50%;
-  background: linear-gradient(45deg, #667eea, #764ba2);
+  background: var(--primary);
   color: white;
   font-size: 1.2rem;
   cursor: pointer;
@@ -40,12 +40,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: var(--shadow-sm);
 }
 
 .play-btn:hover:not(:disabled), .stop-btn:hover:not(:disabled) {
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
+  background: var(--primary-hover);
 }
 
 .play-btn:disabled, .stop-btn:disabled {
@@ -55,20 +56,32 @@
 }
 
 .play-btn.playing {
-  background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+  background: var(--error);
+  box-shadow: var(--shadow-sm);
+}
+
+.play-btn.playing:hover {
+  background: var(--error-hover);
 }
 
 .stop-btn {
   width: 40px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--background-tertiary);
+  color: var(--text-primary);
   font-size: 1rem;
+  border: 1px solid var(--border-medium);
+}
+
+.stop-btn:hover:not(:disabled) {
+  background: var(--border-medium);
+  color: var(--text-primary);
 }
 
 .loading-spinner.small {
   animation: spin 1s linear infinite;
   font-size: 1rem;
+  color: var(--primary);
 }
 
 .player-info {
@@ -78,15 +91,15 @@
 
 .track-name {
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 1rem;
   margin-bottom: 0.25rem;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  line-height: 1.4;
 }
 
 .track-artist {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
 }
 
 .player-timeline {
@@ -99,10 +112,11 @@
 
 .time-current, .time-total {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.8);
-  font-family: 'Courier New', monospace;
+  color: var(--text-secondary);
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
   min-width: 35px;
   text-align: center;
+  font-weight: 500;
 }
 
 .progress-bar {
@@ -117,16 +131,16 @@
 .progress-track {
   width: 100%;
   height: 4px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 2px;
+  background: var(--border-light);
+  border-radius: var(--border-radius-full);
   overflow: hidden;
   position: relative;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #667eea, #764ba2);
-  border-radius: 2px;
+  background: var(--primary);
+  border-radius: var(--border-radius-full);
   transition: width 0.1s ease;
   position: relative;
 }
@@ -139,9 +153,10 @@
   transform: translateY(-50%);
   width: 12px;
   height: 12px;
-  background: #ffffff;
+  background: var(--primary);
+  border: 2px solid white;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-sm);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -159,16 +174,17 @@
 
 .volume-icon {
   font-size: 1rem;
-  opacity: 0.8;
+  color: var(--text-secondary);
 }
 
 .volume-slider {
   flex: 1;
   height: 4px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 2px;
+  background: var(--border-light);
+  border-radius: var(--border-radius-full);
   outline: none;
   -webkit-appearance: none;
+  appearance: none;
   cursor: pointer;
 }
 
@@ -176,29 +192,30 @@
   -webkit-appearance: none;
   width: 12px;
   height: 12px;
-  background: #ffffff;
+  background: var(--primary);
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 2px solid white;
+  box-shadow: var(--shadow-sm);
 }
 
 .volume-slider::-moz-range-thumb {
   width: 12px;
   height: 12px;
-  background: #ffffff;
+  background: var(--primary);
   border-radius: 50%;
   cursor: pointer;
-  border: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 2px solid white;
+  box-shadow: var(--shadow-sm);
 }
 
 .player-error {
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  background: rgba(255, 107, 107, 0.2);
-  border: 1px solid rgba(255, 107, 107, 0.3);
-  border-radius: 8px;
-  color: #ff8a8a;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: var(--error-light);
+  border: 1px solid var(--error-medium);
+  border-radius: var(--border-radius-md);
+  color: var(--error-dark);
   font-size: 0.85rem;
   text-align: center;
 }
@@ -207,7 +224,7 @@
 @media (max-width: 768px) {
   .player-main {
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
     align-items: stretch;
   }
   
@@ -222,7 +239,7 @@
   
   .player-timeline {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
     min-width: auto;
   }
   
@@ -242,13 +259,13 @@
 
 @media (max-width: 480px) {
   .audio-player {
-    padding: 0.75rem;
+    padding: 1rem;
   }
   
   .play-btn, .stop-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 1rem;
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
   }
   
   .stop-btn {
@@ -265,8 +282,14 @@
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%, 100% { 
+    transform: scale(1); 
+    box-shadow: var(--shadow-sm);
+  }
+  50% { 
+    transform: scale(1.02); 
+    box-shadow: var(--shadow-md);
+  }
 }
 
 .play-btn.playing {

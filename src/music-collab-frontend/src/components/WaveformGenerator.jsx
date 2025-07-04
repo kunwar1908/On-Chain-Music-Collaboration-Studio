@@ -89,8 +89,16 @@ const WaveformGenerator = ({ audioFile, onWaveformGenerated, waveformStyle = 'gr
       const imageUrl = canvas.toDataURL('image/png');
       onWaveformGenerated(imageUrl);
       
+      // Show success toast for waveform generation
+      if (window.showToast) {
+        window.showToast('🌊 Waveform visualization generated successfully!', 'waveform');
+      }
+      
     } catch (error) {
       console.error('Error generating waveform:', error);
+      if (window.showToast) {
+        window.showToast('Failed to generate waveform. Please try again.', 'error');
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -1606,6 +1614,11 @@ const WaveformGenerator = ({ audioFile, onWaveformGenerated, waveformStyle = 'gr
       const canvas = canvasRef.current;
       const imageUrl = canvas.toDataURL('image/png');
       onWaveformGenerated(imageUrl);
+      
+      // Show toast for style change (only if this isn't the initial generation)
+      if (window.showToast && waveformData.length > 0) {
+        window.showToast(`🎨 Waveform style updated to ${waveformStyles[waveformStyle]?.name}!`, 'waveform');
+      }
     }
   }, [waveformStyle]);
 

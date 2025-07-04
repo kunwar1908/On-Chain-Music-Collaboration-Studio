@@ -35,6 +35,11 @@ const TrackUpload = ({ project, user, onSubmit, onCancel, loading }) => {
         ...trackData,
         ipfsHash: simulatedHash
       });
+      
+      // Show success toast for file upload
+      if (window.showToast) {
+        window.showToast(`📤 Audio file "${file.name}" uploaded successfully!`, 'upload');
+      }
     }
   };
 

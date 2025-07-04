@@ -6,6 +6,7 @@ import ProjectDetail from './components/ProjectDetail';
 import NFTMarketplace from './components/NFTMarketplace';
 import CollaborationHub from './components/CollaborationHub';
 import Navigation from './components/Navigation';
+import ToastContainer from './components/ToastContainer';
 import './App.css';
 
 function App() {
@@ -45,7 +46,12 @@ function App() {
       await initializeApp();
     } catch (error) {
       console.error('Login failed:', error);
-      alert('Login failed. Please try again.');
+      // Use toast instead of alert for better UX
+      if (window.showToast) {
+        window.showToast('Login failed. Please try again.', 'error');
+      } else {
+        alert('Login failed. Please try again.');
+      }
     } finally {
       setIsAuthenticating(false);
     }
@@ -113,7 +119,11 @@ function App() {
 
   const handleCreateProject = async (projectData) => {
     if (!user) {
-      alert('Please login first to create a project');
+      if (window.showToast) {
+        window.showToast('Please login first to create a project', 'warning');
+      } else {
+        alert('Please login first to create a project');
+      }
       return;
     }
 
@@ -129,9 +139,18 @@ function App() {
       );
       await loadProjects();
       setCurrentView('projects');
+      
+      // Show success toast
+      if (window.showToast) {
+        window.showToast(`Project "${projectData.title}" created successfully!`, 'creation');
+      }
     } catch (error) {
       console.error('Error creating project:', error);
-      alert('Failed to create project. Please check the console for details.');
+      if (window.showToast) {
+        window.showToast('Failed to create project. Please try again.', 'error');
+      } else {
+        alert('Failed to create project. Please check the console for details.');
+      }
     } finally {
       setLoading(false);
     }
@@ -139,7 +158,11 @@ function App() {
 
   const handleMintNFT = async (nftData) => {
     if (!user) {
-      alert('Please login first to mint an NFT');
+      if (window.showToast) {
+        window.showToast('Please login first to mint an NFT', 'warning');
+      } else {
+        alert('Please login first to mint an NFT');
+      }
       return;
     }
 
@@ -157,9 +180,18 @@ function App() {
         nftData.price
       );
       await loadNFTs();
+      
+      // Show success toast
+      if (window.showToast) {
+        window.showToast(`NFT "${nftData.name}" minted successfully!`, 'mint');
+      }
+      
       return nftId;
     } catch (error) {
       console.error('Error minting NFT:', error);
+      if (window.showToast) {
+        window.showToast('Failed to mint NFT. Please try again.', 'error');
+      }
       throw error;
     } finally {
       setLoading(false);
@@ -333,6 +365,7 @@ function App() {
           renderContent()
         )}
       </main>
+      <ToastContainer />
     </div>
   );
 }

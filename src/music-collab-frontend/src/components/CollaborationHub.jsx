@@ -31,7 +31,10 @@ const CollaborationHub = ({ project, onBack, user }) => {
       );
       
       if (success) {
-        alert('Track uploaded successfully!');
+        // Show success toast instead of alert
+        if (window.showToast) {
+          window.showToast(`🎵 Track "${trackData.name}" added to project successfully!`, 'creation');
+        }
         // Reset the active tab to show the session view
         setActiveTab('session');
       } else {
@@ -39,7 +42,9 @@ const CollaborationHub = ({ project, onBack, user }) => {
       }
     } catch (error) {
       console.error('Error uploading track:', error);
-      alert('Failed to upload track. Please try again.');
+      if (window.showToast) {
+        window.showToast('Failed to upload track. Please try again.', 'error');
+      }
     } finally {
       setLoading(false);
     }
