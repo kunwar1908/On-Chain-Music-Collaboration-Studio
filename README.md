@@ -2,6 +2,10 @@
 
 A decentralized music collaboration platform built on the Internet Computer Protocol (ICP) blockchain. Create, collaborate, and monetize your music with blockchain-powered NFTs featuring stunning waveform visualizations.
 
+
+https://github.com/user-attachments/assets/356ae037-9900-4928-ac01-b34640d4f02b
+
+
 ## ✨ Features
 
 - **🎼 Collaborative Music Creation**: Work together on music projects in real-time
