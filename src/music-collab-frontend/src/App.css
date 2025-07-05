@@ -254,6 +254,8 @@ body {
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
+  /* Ensure equal height rows */
+  align-items: stretch;
 }
 
 .stat-card {
@@ -269,6 +271,12 @@ body {
   transition: all 0.3s ease;
   position: relative;
   backdrop-filter: blur(10px);
+  /* Ensure consistent sizing */
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .stat-card::before {
@@ -520,6 +528,8 @@ body {
     grid-column: 1 / -1;
     max-width: 320px;
     margin: 0 auto;
+    /* Ensure consistent height with other cards */
+    min-height: 150px;
   }
 }
 
@@ -532,6 +542,8 @@ body {
   
   .stat-card {
     padding: 2rem 1.5rem;
+    /* Ensure consistent height on mobile */
+    min-height: 140px;
   }
   
   .stat-card h3 {
@@ -619,6 +631,8 @@ body {
   
   .stat-card, .card {
     border-width: 3px;
+    /* Ensure consistent sizing in high contrast mode */
+    min-height: 150px;
   }
   
   .btn-primary, .btn-secondary, .btn-danger {
@@ -640,6 +654,11 @@ body {
 /* Additional Dark Theme Enhancements */
 .dashboard-stats .stat-card:nth-child(3) {
   position: relative;
+  /* Ensure consistent sizing with other cards */
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .dashboard-stats .stat-card:nth-child(3)::before {
