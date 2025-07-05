@@ -7,6 +7,7 @@ import NFTMarketplace from './components/NFTMarketplace';
 import CollaborationHub from './components/CollaborationHub';
 import Navigation from './components/Navigation';
 import ToastContainer from './components/ToastContainer';
+import PinataDebugPanel from './components/PinataDebugPanel';
 import './App.css';
 
 function App() {
@@ -342,6 +343,7 @@ function App() {
 
   return (
     <div className="App">
+      <PinataDebugPanel />
       {user && (
         <Navigation 
           currentView={currentView}

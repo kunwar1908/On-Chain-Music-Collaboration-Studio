@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import pinataService from '../services/pinataService';
+import simplePinataService from '../services/simplePinataService';
 import './AudioPlayer.css';
 
 const AudioPlayer = ({ track, isPlaying, onPlay, onPause, onStop, showWaveform = false }) => {
@@ -8,6 +10,8 @@ const AudioPlayer = ({ track, isPlaying, onPlay, onPause, onStop, showWaveform =
   const [volume, setVolume] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [audioUrl, setAudioUrl] = useState(null);
+  const blobUrlRef = useRef(null);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -99,14 +103,97 @@ const AudioPlayer = ({ track, isPlaying, onPlay, onPause, onStop, showWaveform =
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  const getAudioUrl = () => {
-    // In a real app, this would construct the IPFS URL
-    // For now, we'll use a placeholder or demo URL
+  // Load audio URL when track changes
+  useEffect(() => {
     if (track?.ipfs_hash) {
-      return `https://ipfs.io/ipfs/${track.ipfs_hash}`;
+      loadAudioUrl();
+    } else {
+      setAudioUrl(null);
+      setError(null);
     }
-    // Fallback to a demo audio file
-    return 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav';
+
+    // Cleanup blob URL on unmount or track change
+    return () => {
+      if (blobUrlRef.current) {
+        URL.revokeObjectURL(blobUrlRef.current);
+        blobUrlRef.current = null;
+      }
+    };
+  }, [track?.ipfs_hash]);
+
+  const loadAudioUrl = async () => {
+    if (!track?.ipfs_hash) return;
+    
+    setIsLoading(true);
+    setError(null);
+    
+    // Cleanup previous blob URL
+    if (blobUrlRef.current) {
+      URL.revokeObjectURL(blobUrlRef.current);
+      blobUrlRef.current = null;
+    }
+
+    try {
+      // Check if it's a local hash first
+      if (track.ipfs_hash.startsWith('QmLocal')) {
+        try {
+          const localFile = await simplePinataService.getFile(track.ipfs_hash);
+          if (localFile) {
+            const blobUrl = URL.createObjectURL(localFile);
+            blobUrlRef.current = blobUrl;
+            setAudioUrl(blobUrl);
+            setIsLoading(false);
+            return;
+          }
+        } catch (localError) {
+          console.error('Error loading local file:', localError);
+        }
+      }
+
+      // Try IPFS gateway with timeout
+      const ipfsUrl = `https://gateway.pinata.cloud/ipfs/${track.ipfs_hash}`;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
+      try {
+        const response = await fetch(ipfsUrl, { 
+          method: 'HEAD',
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        
+        if (response.ok) {
+          setAudioUrl(ipfsUrl);
+          setIsLoading(false);
+          return;
+        }
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+        console.log('IPFS gateway not accessible, trying local storage...');
+      }
+      
+      // Try local/IndexedDB storage as fallback
+      try {
+        const localFile = await simplePinataService.getFile(track.ipfs_hash);
+        if (localFile) {
+          const blobUrl = URL.createObjectURL(localFile);
+          blobUrlRef.current = blobUrl;
+          setAudioUrl(blobUrl);
+          setIsLoading(false);
+          return;
+        }
+      } catch (localError) {
+        console.error('Error loading from local storage:', localError);
+      }
+      
+      // If nothing works, set error
+      throw new Error('Audio file not found in IPFS or local storage');
+      
+    } catch (error) {
+      console.error('Error loading audio:', error);
+      setError('Failed to load audio file');
+      setIsLoading(false);
+    }
   };
 
   const progressPercentage = duration ? (currentTime / duration) * 100 : 0;
@@ -115,7 +202,7 @@ const AudioPlayer = ({ track, isPlaying, onPlay, onPause, onStop, showWaveform =
     <div className="audio-player">
       <audio
         ref={audioRef}
-        src={getAudioUrl()}
+        src={audioUrl}
         preload="metadata"
         onEnded={handleStop}
       />

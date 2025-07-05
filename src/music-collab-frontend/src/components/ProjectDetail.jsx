@@ -11,19 +11,32 @@ const ProjectDetail = ({ project, onBack, onUpdate, onStartCollaboration }) => {
   const handleAddTrack = async (trackData) => {
     setLoading(true);
     try {
-      const success = await music_collab_backend.add_track(
+      const result = await music_collab_backend.add_track(
         project.id,
         trackData.name,
         trackData.ipfsHash,
         trackData.uploadedBy,
-        Date.now()
+        trackData.timestamp || Date.now(),
+        trackData.fileSize || 0,
+        trackData.duration || 0,
+        trackData.format || 'audio/unknown'
       );
-      if (success) {
+      
+      if (result && result.Ok) {
         await onUpdate();
         setShowUpload(false);
+        
+        if (window.showToast) {
+          window.showToast(`Track "${trackData.name}" added successfully!`, 'creation');
+        }
+      } else {
+        throw new Error(result.Err || 'Failed to add track');
       }
     } catch (error) {
       console.error('Error adding track:', error);
+      if (window.showToast) {
+        window.showToast(`Failed to add track: ${error.message}`, 'error');
+      }
     } finally {
       setLoading(false);
     }

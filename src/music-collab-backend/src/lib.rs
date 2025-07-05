@@ -2,6 +2,9 @@
 
 use candid::{CandidType, Deserialize};
 use std::collections::HashMap;
+use ic_cdk::api::management_canister::http_request::{
+    http_request, CanisterHttpRequestArgument, HttpHeader, HttpMethod, HttpResponse, TransformArgs,
+};
 
 #[derive(CandidType, Deserialize, Clone)]
 pub struct MusicProject {
@@ -15,11 +18,14 @@ pub struct MusicProject {
 
 #[derive(CandidType, Deserialize, Clone)]
 pub struct Track {
-    pub id: u64,
+    pub id: String, // Use String for better unique IDs
     pub name: String,
     pub ipfs_hash: String, // Store music file on IPFS, save hash here
     pub uploaded_by: String,
     pub timestamp: u64,
+    pub file_size: u64,
+    pub duration: f64, // in seconds
+    pub format: String, // audio/mpeg, audio/wav, etc.
 }
 
 #[derive(CandidType, Deserialize, Clone)]
@@ -31,6 +37,23 @@ pub struct NFTMetadata {
     pub creator: String,
     pub project_id: u64,
     pub price: u64,
+}
+
+#[derive(CandidType, Deserialize, Clone)]
+pub struct PinataUploadRequest {
+    pub file_data: Vec<u8>,
+    pub file_name: String,
+    pub content_type: String,
+    pub api_key: String,
+    pub secret_key: String,
+}
+
+#[derive(CandidType, Deserialize, Clone)]
+pub struct PinataUploadResponse {
+    pub success: bool,
+    pub ipfs_hash: String,
+    pub pin_size: u64,
+    pub error: Option<String>,
 }
 
 thread_local! {
@@ -63,21 +86,36 @@ fn create_project(title: String, description: String, owner: String) -> u64 {
 }
 
 #[ic_cdk::update]
-fn add_track(project_id: u64, name: String, ipfs_hash: String, uploaded_by: String, timestamp: u64) -> bool {
+fn add_track(
+    project_id: u64, 
+    name: String, 
+    ipfs_hash: String, 
+    uploaded_by: String, 
+    timestamp: u64,
+    file_size: u64,
+    duration: f64,
+    format: String
+) -> Result<String, String> {
     PROJECTS.with(|projects| {
         let mut projects = projects.borrow_mut();
         if let Some(project) = projects.get_mut(&project_id) {
+            // Generate unique track ID using timestamp and random component
+            let track_id = format!("track_{}_{}", timestamp, ic_cdk::api::time());
+            
             let track = Track {
-                id: project.tracks.len() as u64 + 1,
+                id: track_id.clone(),
                 name,
                 ipfs_hash,
                 uploaded_by,
                 timestamp,
+                file_size,
+                duration,
+                format,
             };
             project.tracks.push(track);
-            true
+            Ok(track_id)
         } else {
-            false
+            Err("Project not found".to_string())
         }
     })
 }
@@ -110,7 +148,7 @@ fn add_contributor(project_id: u64, contributor: String) -> bool {
 }
 
 #[ic_cdk::update]
-fn remove_track(project_id: u64, track_id: u64) -> bool {
+fn remove_track(project_id: u64, track_id: String) -> bool {
     PROJECTS.with(|projects| {
         let mut projects = projects.borrow_mut();
         if let Some(project) = projects.get_mut(&project_id) {
@@ -168,4 +206,122 @@ fn list_nfts() -> Vec<NFTMetadata> {
 #[ic_cdk::query]
 fn get_nft(nft_id: u64) -> Option<NFTMetadata> {
     NFTS.with(|nfts| nfts.borrow().get(&nft_id).cloned())
+}
+
+#[ic_cdk::update]
+async fn upload_to_pinata(request: PinataUploadRequest) -> PinataUploadResponse {
+    // Create multipart/form-data body
+    let boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
+    let mut body = Vec::new();
+    
+    // Add file field
+    body.extend_from_slice(format!("--{}\r\n", boundary).as_bytes());
+    body.extend_from_slice(b"Content-Disposition: form-data; name=\"file\"; filename=\"");
+    body.extend_from_slice(request.file_name.as_bytes());
+    body.extend_from_slice(b"\"\r\n");
+    body.extend_from_slice(format!("Content-Type: {}\r\n\r\n", request.content_type).as_bytes());
+    body.extend_from_slice(&request.file_data);
+    body.extend_from_slice(b"\r\n");
+    
+    // Add metadata field
+    let metadata = format!(
+        r#"{{"name":"{}","keyvalues":{{"type":"audio","uploadedVia":"IC-Backend","timestamp":"{}"}}}}"#,
+        request.file_name,
+        ic_cdk::api::time()
+    );
+    body.extend_from_slice(format!("--{}\r\n", boundary).as_bytes());
+    body.extend_from_slice(b"Content-Disposition: form-data; name=\"pinataMetadata\"\r\n\r\n");
+    body.extend_from_slice(metadata.as_bytes());
+    body.extend_from_slice(b"\r\n");
+    
+    // End boundary
+    body.extend_from_slice(format!("--{}--\r\n", boundary).as_bytes());
+    
+    let headers = vec![
+        HttpHeader {
+            name: "Content-Type".to_string(),
+            value: format!("multipart/form-data; boundary={}", boundary),
+        },
+        HttpHeader {
+            name: "pinata_api_key".to_string(),
+            value: request.api_key,
+        },
+        HttpHeader {
+            name: "pinata_secret_api_key".to_string(),
+            value: request.secret_key,
+        },
+    ];
+    
+    let request_args = CanisterHttpRequestArgument {
+        url: "https://api.pinata.cloud/pinning/pinFileToIPFS".to_string(),
+        method: HttpMethod::POST,
+        body: Some(body),
+        max_response_bytes: Some(2048),
+        transform: None,
+        headers,
+    };
+    
+    match http_request(request_args, 2_000_000_000).await {
+        Ok((response,)) => {
+            if response.status == candid::Nat::from(200u8) {
+                // Parse JSON response
+                if let Ok(response_text) = String::from_utf8(response.body) {
+                    // Simple JSON parsing for IPFS hash
+                    if let Some(start) = response_text.find("\"IpfsHash\":\"") {
+                        let start = start + 12; // Length of "\"IpfsHash\":\""
+                        if let Some(end) = response_text[start..].find("\"") {
+                            let ipfs_hash = response_text[start..start + end].to_string();
+                            
+                            // Extract pin size if available
+                            let pin_size = if let Some(size_start) = response_text.find("\"PinSize\":") {
+                                let size_start = size_start + 10;
+                                if let Some(size_end) = response_text[size_start..].find(",") {
+                                    response_text[size_start..size_start + size_end]
+                                        .parse::<u64>()
+                                        .unwrap_or(0)
+                                } else {
+                                    0
+                                }
+                            } else {
+                                0
+                            };
+                            
+                            return PinataUploadResponse {
+                                success: true,
+                                ipfs_hash,
+                                pin_size,
+                                error: None,
+                            };
+                        }
+                    }
+                }
+                
+                PinataUploadResponse {
+                    success: false,
+                    ipfs_hash: String::new(),
+                    pin_size: 0,
+                    error: Some("Failed to parse Pinata response".to_string()),
+                }
+            } else {
+                PinataUploadResponse {
+                    success: false,
+                    ipfs_hash: String::new(),
+                    pin_size: 0,
+                    error: Some(format!("Pinata API error: {}", response.status)),
+                }
+            }
+        }
+        Err(e) => PinataUploadResponse {
+            success: false,
+            ipfs_hash: String::new(),
+            pin_size: 0,
+            error: Some(format!("HTTP request failed: {:?}", e)),
+        },
+    }
+}
+
+// Transform function for HTTP outcalls (required by IC)
+#[ic_cdk::query]
+fn transform_response(args: TransformArgs) -> HttpResponse {
+    args.response
 }
