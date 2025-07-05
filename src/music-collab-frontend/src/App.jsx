@@ -177,8 +177,8 @@ function App() {
         nftData.description,
         nftData.image_url,
         nftData.creator,
-        nftData.project_id,
-        nftData.price
+        BigInt(nftData.project_id),
+        BigInt(nftData.price)
       );
       await loadNFTs();
       
@@ -204,7 +204,7 @@ function App() {
       const actor = authService.getActor();
       if (!actor) throw new Error('No authenticated actor available');
       
-      const project = await actor.get_project(projectId);
+      const project = await actor.get_project(BigInt(projectId));
       if (project && project.length > 0) {
         setSelectedProject(project[0]);
         setCurrentView('detail');

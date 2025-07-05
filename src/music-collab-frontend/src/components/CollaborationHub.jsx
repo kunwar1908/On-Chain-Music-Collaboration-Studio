@@ -23,11 +23,11 @@ const CollaborationHub = ({ project, onBack, user }) => {
       
       // Add track to the project using the existing backend function
       const success = await actor.add_track(
-        project.id,
+        BigInt(project.id),
         trackData.name,
         trackData.ipfsHash,
         trackData.uploadedBy,
-        Date.now() * 1000000 // Convert to nanoseconds for IC timestamp
+        BigInt(Date.now()) // Convert to BigInt for IC
       );
       
       if (success) {

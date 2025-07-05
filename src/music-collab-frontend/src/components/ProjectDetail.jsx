@@ -11,18 +11,45 @@ const ProjectDetail = ({ project, onBack, onUpdate, onStartCollaboration }) => {
   const handleAddTrack = async (trackData) => {
     setLoading(true);
     try {
+      // Debug logging to check all parameter types
+      console.log('🔍 Adding track with parameters:', {
+        project_id: project.id,
+        project_id_type: typeof project.id,
+        project_id_bigint: BigInt(project.id),
+        name: trackData.name,
+        name_type: typeof trackData.name,
+        ipfsHash: trackData.ipfsHash,
+        ipfsHash_type: typeof trackData.ipfsHash,
+        uploadedBy: trackData.uploadedBy,
+        uploadedBy_type: typeof trackData.uploadedBy,
+        timestamp: trackData.timestamp || Date.now(),
+        timestamp_type: typeof (trackData.timestamp || Date.now()),
+        timestamp_bigint: BigInt(trackData.timestamp || Date.now())
+      });
+
+      // Validate all required parameters
+      if (!project?.id) {
+        throw new Error('Project ID is missing');
+      }
+      if (!trackData?.name) {
+        throw new Error('Track name is missing');
+      }
+      if (!trackData?.ipfsHash) {
+        throw new Error('IPFS hash is missing');
+      }
+      if (!trackData?.uploadedBy) {
+        throw new Error('Uploaded by field is missing');
+      }
+
       const result = await music_collab_backend.add_track(
-        project.id,
-        trackData.name,
-        trackData.ipfsHash,
-        trackData.uploadedBy,
-        trackData.timestamp || Date.now(),
-        trackData.fileSize || 0,
-        trackData.duration || 0,
-        trackData.format || 'audio/unknown'
+        BigInt(project.id),
+        String(trackData.name),
+        String(trackData.ipfsHash),
+        String(trackData.uploadedBy),
+        BigInt(trackData.timestamp || Date.now())
       );
       
-      if (result && result.Ok) {
+      if (result) {
         await onUpdate();
         setShowUpload(false);
         
@@ -30,7 +57,7 @@ const ProjectDetail = ({ project, onBack, onUpdate, onStartCollaboration }) => {
           window.showToast(`Track "${trackData.name}" added successfully!`, 'creation');
         }
       } else {
-        throw new Error(result.Err || 'Failed to add track');
+        throw new Error('Failed to add track');
       }
     } catch (error) {
       console.error('Error adding track:', error);
@@ -45,7 +72,9 @@ const ProjectDetail = ({ project, onBack, onUpdate, onStartCollaboration }) => {
   const handleRemoveTrack = async (trackId) => {
     if (window.confirm('Are you sure you want to remove this track?')) {
       try {
-        const success = await music_collab_backend.remove_track(project.id, trackId);
+        // Convert string trackId to BigInt if necessary
+        const trackIdNum = typeof trackId === 'string' ? BigInt(trackId.replace(/\D/g, '') || 0) : BigInt(trackId);
+        const success = await music_collab_backend.remove_track(BigInt(project.id), trackIdNum);
         if (success) {
           await onUpdate();
         }
@@ -59,7 +88,7 @@ const ProjectDetail = ({ project, onBack, onUpdate, onStartCollaboration }) => {
     const contributor = prompt('Enter contributor name:');
     if (contributor) {
       try {
-        const success = await music_collab_backend.add_contributor(project.id, contributor);
+        const success = await music_collab_backend.add_contributor(BigInt(project.id), contributor);
         if (success) {
           await onUpdate();
         }

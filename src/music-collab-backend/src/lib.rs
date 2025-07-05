@@ -18,14 +18,11 @@ pub struct MusicProject {
 
 #[derive(CandidType, Deserialize, Clone)]
 pub struct Track {
-    pub id: String, // Use String for better unique IDs
+    pub id: u64,
     pub name: String,
-    pub ipfs_hash: String, // Store music file on IPFS, save hash here
+    pub ipfs_hash: String,
     pub uploaded_by: String,
     pub timestamp: u64,
-    pub file_size: u64,
-    pub duration: f64, // in seconds
-    pub format: String, // audio/mpeg, audio/wav, etc.
 }
 
 #[derive(CandidType, Deserialize, Clone)]
@@ -91,31 +88,25 @@ fn add_track(
     name: String, 
     ipfs_hash: String, 
     uploaded_by: String, 
-    timestamp: u64,
-    file_size: u64,
-    duration: f64,
-    format: String
-) -> Result<String, String> {
+    timestamp: u64
+) -> bool {
     PROJECTS.with(|projects| {
         let mut projects = projects.borrow_mut();
         if let Some(project) = projects.get_mut(&project_id) {
             // Generate unique track ID using timestamp and random component
-            let track_id = format!("track_{}_{}", timestamp, ic_cdk::api::time());
+            let track_id = timestamp;
             
             let track = Track {
-                id: track_id.clone(),
+                id: track_id,
                 name,
                 ipfs_hash,
                 uploaded_by,
                 timestamp,
-                file_size,
-                duration,
-                format,
             };
             project.tracks.push(track);
-            Ok(track_id)
+            true
         } else {
-            Err("Project not found".to_string())
+            false
         }
     })
 }
@@ -148,7 +139,7 @@ fn add_contributor(project_id: u64, contributor: String) -> bool {
 }
 
 #[ic_cdk::update]
-fn remove_track(project_id: u64, track_id: String) -> bool {
+fn remove_track(project_id: u64, track_id: u64) -> bool {
     PROJECTS.with(|projects| {
         let mut projects = projects.borrow_mut();
         if let Some(project) = projects.get_mut(&project_id) {
