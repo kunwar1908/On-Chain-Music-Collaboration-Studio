@@ -3,8 +3,8 @@
 async function directPinataTest() {
   console.log('🔧 Direct Pinata Test Starting...');
   
-  const API_KEY = 'b49dea9ed88bf6e5387b';
-  const SECRET_KEY = '7d200add512fa6bb8195f67430485ee6c96bab07d5080dd9d4a89398d857e6a2';
+  const API_KEY = 'your_api_key';
+  const SECRET_KEY = 'uoir_secrer_key';
   
   // Create a simple test file
   const testContent = 'Hello from Music Collab Studio!';
